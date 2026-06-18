@@ -150,7 +150,7 @@
         <div class="core-project-badge">核心项目</div>
         <h3 class="core-project-name">影灵灵</h3>
         <p class="core-project-tagline">AI 皮影文化 IP</p>
-        <p class="core-project-desc">以生成式 AI 为核心的内容生产体系，让传统皮影戏在数字时代焕发新生。通过 Prompt 工程、视觉一致性控制和多模态管线设计，实现文化 IP 的规模化 AIGC 内容输出。</p>
+        <p class="core-project-desc">通过 AI 提示词设计，让影灵灵角色在不同场景中保持统一形象，并实现从创意到成片的完整 AI 内容生产。</p>
         <a href="#project" class="card-link">查看详情 →</a>
       </div>
 
@@ -280,20 +280,32 @@
       <span class="psl-text">/ Method</span>
     </div>
     <div class="tech-grid">
-      <div class="tech-card">
+      <div class="tech-card" onclick="openMethodDetail(0)">
         <div class="tech-icon">🎯</div>
         <h4>Prompt 工程</h4>
         <p>通过结构化 Prompt 设计，实现皮影角色在多场景下的视觉一致性，建立可复用的提示词模板库。</p>
+        <span class="card-link" style="margin-top:12px;display:inline-block;">查看具体做法 →</span>
       </div>
-      <div class="tech-card">
+      <div class="tech-card" onclick="openMethodDetail(1)">
         <div class="tech-icon">🎨</div>
         <h4>视觉一致性控制</h4>
         <p>结合 LoRA 微调与风格锚定技术，确保影灵灵角色在不同生成任务中保持核心特征稳定。</p>
+        <span class="card-link" style="margin-top:12px;display:inline-block;">查看具体做法 →</span>
       </div>
-      <div class="tech-card">
+      <div class="tech-card" onclick="openMethodDetail(2)">
         <div class="tech-icon">🔗</div>
         <h4>多模态管线设计</h4>
         <p>整合文本→图像→视频的生成管线，实现从创意构思到成片输出的一站式 AIGC 内容生产。</p>
+        <span class="card-link" style="margin-top:12px;display:inline-block;">查看具体做法 →</span>
+      </div>
+    </div>
+
+    <!-- Method Detail Lightbox -->
+    <div class="method-lightbox" id="methodLightbox">
+      <div class="method-lightbox-close" onclick="closeMethodDetail()">&times;</div>
+      <div class="method-lightbox-content">
+        <h3 id="method-title"></h3>
+        <div id="method-body"></div>
       </div>
     </div>
   </section>

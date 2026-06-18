@@ -867,8 +867,96 @@ img{ max-width:100%; display:block; }
 }
 
 /* ======================================
-   TOAST
+   METHOD DETAIL LIGHTBOX
    ====================================== */
+.method-lightbox{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  background:rgba(0,0,0,0);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.method-lightbox.open{
+  opacity:1;
+  pointer-events:auto;
+  background:rgba(0,0,0,0.85);
+}
+.method-lightbox-close{
+  position:absolute;
+  top:28px;
+  right:32px;
+  width:44px;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  color:rgba(255,255,255,0.85);
+  cursor:pointer;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  transition:all 0.3s;
+  z-index:2;
+  line-height:1;
+}
+.method-lightbox-close:hover{
+  background:rgba(255,255,255,0.2);
+  color:#fff;
+  transform:scale(1.08);
+}
+.method-lightbox-content{
+  background:#fff;
+  border-radius:24px;
+  padding:48px 40px;
+  max-width:700px;
+  width:90vw;
+  max-height:85vh;
+  overflow-y:auto;
+  transform:scale(0.9);
+  opacity:0;
+  transition:all 0.45s cubic-bezier(0.16,1,0.3,1);
+}
+.method-lightbox.open .method-lightbox-content{
+  transform:scale(1);
+  opacity:1;
+}
+.method-lightbox-content h3{
+  font-family:"Noto Serif SC","Space Grotesk",serif;
+  font-size:28px;
+  font-weight:700;
+  color:#1d1d1f;
+  margin-bottom:20px;
+}
+.method-lightbox-content p{
+  font-size:15px;
+  color:#515154;
+  line-height:1.8;
+  margin-bottom:16px;
+}
+.method-lightbox-content img{
+  width:100%;
+  border-radius:12px;
+  margin:12px 0;
+}
+.method-lightbox-content .detail-placeholder{
+  padding:32px;
+  background:#f5f5f7;
+  border-radius:12px;
+  text-align:center;
+  color:#86868b;
+  font-size:14px;
+  margin-top:16px;
+}
+
+/* Make tech-cards look clickable */
+.tech-card{
+  cursor:pointer;
+}
 .toast{
   position:fixed;
   bottom:32px;
