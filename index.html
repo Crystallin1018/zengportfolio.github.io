@@ -186,6 +186,15 @@
   </div>
 </section>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
+  <div class="lightbox-content">
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast">微信号已复制 ✓</div>
 
@@ -196,6 +205,37 @@
 </footer>
 
 <script>
+/* Lightbox — click to enlarge demo images */
+function openLightbox(img, caption){
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+  const lbCap = document.getElementById('lightbox-caption');
+  lbImg.src = img.src;
+  lbImg.alt = img.alt;
+  lbCap.textContent = caption || img.alt || '';
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightbox').addEventListener('click', function(e){
+  if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeLightbox();
+});
+/* Bind clicks on all demo-item images */
+document.querySelectorAll('.demo-item img').forEach(function(img){
+  img.addEventListener('click', function(e){
+    e.stopPropagation();
+    const caption = this.parentElement.querySelector('p');
+    openLightbox(this, caption ? caption.textContent : '');
+  });
+});
+
 /* Copy WeChat ID — with fallback for file:// protocol */
 function copyWechat(){
   const id = 'Zzing1018';

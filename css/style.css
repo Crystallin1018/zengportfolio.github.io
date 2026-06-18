@@ -526,6 +526,103 @@ CONTACT
 
 .wechat-card{ cursor:pointer; }
 
+/* ======================
+LIGHTBOX
+====================== */
+
+.lightbox{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  background:rgba(0,0,0,0);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.lightbox.show{
+  opacity:1;
+  pointer-events:auto;
+  background:rgba(0,0,0,0.88);
+}
+
+.lightbox-close{
+  position:absolute;
+  top:28px;
+  right:32px;
+  width:44px;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  color:rgba(255,255,255,0.85);
+  cursor:pointer;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  transition:all 0.3s;
+  z-index:2;
+  line-height:1;
+}
+.lightbox-close:hover{
+  background:rgba(255,255,255,0.2);
+  color:#fff;
+  transform:scale(1.08);
+}
+
+.lightbox-content{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  max-width:90vw;
+  max-height:90vh;
+}
+
+.lightbox-content img{
+  max-width:90vw;
+  max-height:78vh;
+  object-fit:contain;
+  border-radius:16px;
+  box-shadow:0 40px 100px rgba(0,0,0,0.5);
+  transform:scale(0.85);
+  opacity:0;
+  transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.lightbox.show .lightbox-content img{
+  transform:scale(1);
+  opacity:1;
+}
+
+.lightbox-content p{
+  margin:18px 0 0;
+  font-size:15px;
+  font-weight:600;
+  color:rgba(255,255,255,0.7);
+  text-align:center;
+}
+
+/* Clickable hint on demo images */
+.demo-item{
+  cursor:pointer;
+  position:relative;
+}
+.demo-item::after{
+  content:'🔍';
+  position:absolute;
+  bottom:48px;
+  right:14px;
+  font-size:16px;
+  opacity:0;
+  transform:translateY(4px);
+  transition:all 0.3s;
+}
+.demo-item:hover::after{
+  opacity:0.8;
+  transform:translateY(0);
+}
+
 /* Toast notification */
 .toast{
   position:fixed;
