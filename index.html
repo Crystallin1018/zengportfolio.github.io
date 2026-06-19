@@ -349,6 +349,82 @@
     }
     .about-photo-frame:hover img { transform: scale(1.03); }
 
+    
+    /* ===== Poker Card Stack ===== */
+    .about-photo-col {
+      display: flex; flex-direction: column; align-items: center; gap: 24px;
+    }
+    
+    .poker-stack {
+      position: relative;
+      width: 260px; height: 340px;
+      cursor: pointer;
+      perspective: 1000px;
+    }
+
+    .poker-card {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 0;
+      transform: translateY(12px) scale(0.95) rotate(-2deg);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .poker-card.active {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(0deg);
+      z-index: 10;
+      pointer-events: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Bottom card slightly visible underneath */
+    .poker-card:not(.active) {
+      opacity: 0.7;
+      transform: translateY(-6px) scale(0.96) rotate(1.5deg);
+      z-index: 5;
+    }
+
+    .poker-stack:hover .poker-card.active {
+      box-shadow: 0 20px 50px rgba(0,0,0,0.18), 0 8px 16px rgba(0,0,0,0.10);
+    }
+
+    .poker-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      user-select: none; -webkit-user-drag: none;
+    }
+
+    /* Card border decoration (poker style) */
+    .poker-card-border {
+      position: absolute; inset: 6px;
+      border: 1px solid rgba(180,170,150,0.25);
+      border-radius: 8px; pointer-events: none;
+    }
+
+    /* Corner suit marks */
+
+    /* Dots indicator */
+    .poker-dots {
+      position: absolute; bottom: -28px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 20;
+    }
+    .poker-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #d0ccc2; cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .poker-dot:hover { background: #a09a8c; }
+    .poker-dot.active { background: #9a9a8a; transform: scale(1.3); }
+
     .about-name-badge {
       text-align: center;
     }
@@ -671,6 +747,9 @@
       transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .flip-card.flipped { transform: rotateY(180deg); }
+.flip-card {
+  transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+}
 
     .flip-face {
       position: absolute; inset: 0;
@@ -882,6 +961,73 @@
       /* Quadrant mobile */
       .quadrant-wrap { padding: 16px; margin-top: 32px; }
       .q-center-circle { width: 70px; height: 70px; font-size: 26px; }
+
+/* -- next-card peek -- */
+body .poker-card.next {
+  opacity: 0.6 !important;
+  transform: translateX(16px) translateY(-12px) rotate(6deg) scale(0.96) !important;
+  z-index: 5 !important;
+  pointer-events: none;
+  box-shadow: 3px 5px 18px rgba(0,0,0,0.12);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+body .poker-card.behind {
+  opacity: 0.18 !important;
+  transform: translateY(10px) scale(0.92) !important;
+  z-index: 2 !important;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* -- card enlarge modal -- */
+.card-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.card-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.card-modal-box {
+  background: #fefcf7;
+  border: 1px solid #d9d5cc;
+  border-radius: 12px;
+  max-width: 520px; width: 90%;
+  padding: 48px 40px;
+  position: relative;
+  transform: translateY(30px) scale(0.95);
+  transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+  text-align: center;
+}
+.card-modal-overlay.open .card-modal-box {
+  transform: translateY(0) scale(1);
+}
+.card-modal-close {
+  position: absolute; top: 14px; right: 18px;
+  background: none; border: none;
+  font-size: 22px; cursor: pointer;
+  color: #999; line-height: 1;
+}
+.card-modal-close:hover { color: #333; }
+.card-modal-box h4 {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: 22px; font-weight: 700;
+  margin-bottom: 16px;
+  color: #3a3632;
+}
+.card-modal-box p {
+  font-size: 14px; line-height: 2;
+  color: #5a5652;
+}
+.card-modal-box .modal-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
 </style>
 </head>
 
@@ -1027,11 +1173,30 @@
     <div class="about-grid">
       <!-- Left: Photo + Name -->
       <div class="about-photo-col fade-up">
-        <div class="about-photo-frame" id="aboutPhotoFrame">
-          <!-- JS will insert avatar image here -->
-          <img src="" alt="曾银晶" id="aboutAvatarImg" 
-               onerror="this.style.display='none'" style="opacity:0;">
-          <div class="avatar-placeholder" id="aboutPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display','Noto Serif SC',serif;font-size:64px;color:#ccc;">曾</div>
+        <!-- Poker Card Stack Photos -->
+        <div class="poker-stack" id="pokerStack">
+          <!-- Card 0: 证件照 -->
+          <div class="poker-card active" data-index="0" data-label="ID Photo">
+            <img src="images/about/photo.jpg" alt="证件照" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <!-- Card 1: 好宝BEE -->
+          <div class="poker-card" data-index="1" data-label="Haobao BEE">
+            <img src="images/about/haobao-bee.jpg" alt="好宝 BEE 合照" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <!-- Card 2: 粉色外套 -->
+          <div class="poker-card" data-index="2" data-label="Pink Jacket">
+            <img src="images/about/pink-jacket.jpg" alt="粉色外套" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <!-- Card 3: 小熊合照 -->
+          <div class="poker-card" data-index="3" data-label="Bear Photo">
+            <img src="images/about/bear-photo.jpg" alt="小熊合照" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <div class="poker-dots">
+            <span class="poker-dot active" data-target="0"></span>
+            <span class="poker-dot" data-target="1"></span>
+            <span class="poker-dot" data-target="2"></span>
+            <span class="poker-dot" data-target="3"></span>
+          </div>
         </div>
         <div class="about-name-badge">
           <h3>曾银晶 / Crystal</h3>
@@ -1182,12 +1347,12 @@
   <section class="section beyond-section" id="beyond">
 
     <h3 class="fade-up">Beyond Design</h3>
-    <p class="beyond-subtitle fade-up">Hover to flip the card &mdash; there's more than meets the eye.</p>
+    <p class="beyond-subtitle fade-up">Hover to flip &middot; click to enlarge</p>
 
     <div class="flip-cards">
 
       <!-- Card 1: Hobbies -->
-      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card" onclick="openCardModal(this)">
         <div class="flip-face flip-front">
           <div class="flip-front-icon">✨</div>
           <h4>个人爱好</h4>
@@ -1198,12 +1363,12 @@
           <p>喜欢探索城市里的隐藏角落，用镜头记录日常中的不平凡。<br><br>
              热衷于将传统手工艺与现代设计语言结合，相信每一件旧物都有自己的故事。<br><br>
              闲暇时也会研究咖啡冲煮和胶片摄影，享受慢节奏的创作过程。</p>
-          <p class="flip-hint">Click to flip back ←</p>
+          <p class="flip-hint">Click to enlarge ↗</p>
         </div>
       </div>
 
       <!-- Card 2: 小红书博主 -->
-      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card" onclick="openCardModal(this)">
         <div class="flip-face flip-front">
           <div class="flip-front-icon">📕</div>
           <h4>小红书博主</h4>
@@ -1215,12 +1380,12 @@
              记录从灵感萌芽到作品落地的完整心路历程，<br>
              也分享作为大学生创作者的成长故事。<br><br>
              相信好的内容是真诚的表达。</p>
-          <p class="flip-hint">Click to flip back ←</p>
+          <p class="flip-hint">Click to enlarge ↗</p>
         </div>
       </div>
 
       <!-- Card 3: Vibecoding -->
-      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card" onclick="openCardModal(this)">
         <div class="flip-face flip-front">
           <div class="flip-front-icon">💻</div>
           <h4>Vibe Coding</h4>
@@ -1232,7 +1397,7 @@
              这个网站本身就是 Vibe Coding 的产物——<br>
              从设计到实现，全程由 AI 辅助完成。<br><br>
              技术不是门槛，创意才是核心。</p>
-          <p class="flip-hint">Click to flip back ←</p>
+          <p class="flip-hint">Click to enlarge ↗</p>
         </div>
       </div>
 
@@ -1504,7 +1669,142 @@
     if (document.readyState !== 'loading') {
       loadAvatar();
     }
-  </script>
+    // ===== Poker Stack Switch =====
 
+  /* -- Flip card hover control (JS) -- */
+  (function() {
+    var cards = document.querySelectorAll('.flip-card');
+    for (var i = 0; i < cards.length; i++) {
+      (function(c) {
+        var flipping = false;
+        c.addEventListener('mouseenter', function() {
+          if (flipping) return;
+          flipping = true;
+          c.classList.add('flipped');
+          setTimeout(function() { flipping = false; }, 400);
+        });
+        c.addEventListener('mouseleave', function() {
+          if (flipping) return;
+          flipping = true;
+          c.classList.remove('flipped');
+          setTimeout(function() { flipping = false; }, 400);
+        });
+      })(cards[i]);
+    }
+  })();
+
+  (function() {
+    var stack = document.getElementById('pokerStack');
+    if (!stack) return;
+    var cards = stack.querySelectorAll('.poker-card');
+    var dots = stack.querySelectorAll('.poker-dot');
+    var current = 0;  // photo.jpg is first card
+
+    function updatePeek() {
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('next', 'behind');
+      }
+      var nextIdx = (current + 1) % cards.length;
+      // Use setTimeout to ensure class removal takes effect first
+      var nxt = cards[nextIdx];
+      nxt.classList.add('next');
+      if (cards.length > 2) {
+        var behindIdx = (current + 2) % cards.length;
+        if (behindIdx !== nextIdx) {
+          cards[behindIdx].classList.add('behind');
+        }
+      }
+    }
+
+    function switchCard(idx) {
+      if (idx === current) return;
+      var oldCard = stack.querySelector('.poker-card.active');
+      var dir = idx > current ? 1 : -1;
+      // Remove peek classes immediately
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('next', 'behind');
+      }
+      if (oldCard) {
+        oldCard.style.transform = 'translateY(' + (-dir * 30) + 'px) scale(0.92) rotate(' + (dir * -8) + 'deg)';
+        oldCard.style.opacity = '0';
+        oldCard.classList.remove('active');
+      }
+      setTimeout(function() {
+        var newCard = cards[idx];
+        newCard.style.transform = 'translateY(' + (dir * 20) + 'px) scale(0.95) rotate(' + (dir * 3) + 'deg)';
+        newCard.style.opacity = '0';
+        newCard.classList.add('active');
+        current = idx;
+        // Update dots
+        for (var i = 0; i < dots.length; i++) {
+          dots[i].classList.toggle('active', i === current);
+        }
+        // Clear inline styles so CSS classes can take effect
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            newCard.style.transform = '';
+            newCard.style.opacity = '';
+            // Now apply peek effect after transition completes
+            setTimeout(function() { updatePeek(); }, 50);
+          });
+        });
+      }, 200);
+    }
+
+    updatePeek();  // init peek
+
+    stack.addEventListener('click', function(e) {
+      if (e.target.closest('.poker-dot')) return;
+      switchCard((current + 1) % cards.length);
+    });
+    for (var di = 0; di < dots.length; di++) {
+      (function(idx) {
+        dots[idx].addEventListener('click', function(e) {
+          e.stopPropagation();
+          switchCard(idx);
+        });
+      })(di);
+    }
+    stack.setAttribute('tabindex', '0');
+    stack.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') switchCard((current - 1 + cards.length) % cards.length);
+      else if (e.key === 'ArrowRight') switchCard((current + 1) % cards.length);
+    });
+  })();
+
+</script>
+
+
+  <!-- Card Enlarge Modal -->
+  <div class="card-modal-overlay" id="cardModal">
+    <div class="card-modal-box">
+      <button class="card-modal-close" onclick="closeCardModal()">&times;</button>
+      <div class="modal-icon" id="modalIcon"></div>
+      <h4 id="modalTitle"></h4>
+      <p id="modalBody"></p>
+    </div>
+  </div>
+
+  <script>
+    function openCardModal(cardEl) {
+      var back = cardEl.querySelector('.flip-back');
+      if (!back) return;
+      var icon = cardEl.querySelector('.flip-front-icon');
+      var title = back.querySelector('h4');
+      var body = back.querySelector('p:not(.flip-hint)');
+      document.getElementById('modalIcon').innerHTML = icon ? icon.innerHTML : '';
+      document.getElementById('modalTitle').innerHTML = title ? title.innerHTML : '';
+      document.getElementById('modalBody').innerHTML = body ? body.innerHTML : '';
+      document.getElementById('cardModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCardModal() {
+      document.getElementById('cardModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('cardModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCardModal();
+    });
+  </script>
 </body>
 </html>
