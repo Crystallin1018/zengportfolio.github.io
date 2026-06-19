@@ -28,7 +28,7 @@
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    html { scroll-behavior: smooth; font-size: 16px; }
+    html { scroll-behavior: smooth; font-size: 24px; }
     body {
       font-family: var(--font-sans);
       background-color: var(--bg-primary);
@@ -618,13 +618,13 @@
       font-size: clamp(32px, 3.6vw, 48px);
       font-weight: 700;
       letter-spacing: 8px;
-      color: #3a3632;
+      color: #fff;
       margin: 0 0 4px;
     }
     .mag-masthead-text p {
       font-size: 11px;
       letter-spacing: 2px;
-      color: #a09b91;
+      color: rgba(255,255,255,0.6);
       text-transform: uppercase;
       margin: 0;
     }
@@ -710,51 +710,55 @@
     /* Project title (oversized serif) */
     .mag-title {
       font-family: 'Playfair Display', 'Noto Serif SC', serif;
-      font-size: clamp(56px, 9vw, 160px);
+      font-size: clamp(72px, 11vw, 200px);
       font-weight: 700;
       letter-spacing: -5px;
       line-height: 0.88;
-      color: #1a1a1a;
-    }
+      color: #fff;;
+    
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);}
     .mag-spread--light .mag-title {
-      color: #fff;
+      color: #fff;;
     }
     .mag-title-en {
       display: block;
       font-family: 'Playfair Display', serif;
-      font-size: clamp(11px, 1vw, 15px);
+      font-size: clamp(13px, 1.3vw, 17px);
       font-weight: 400;
       letter-spacing: 5px;
       text-transform: uppercase;
-      color: #888;
+      color: rgba(255,255,255,0.7);
       margin-top: 16px;
       line-height: 1.4;
-    }
+    
+      text-shadow: 0 1px 8px rgba(0,0,0,0.4);}
     .mag-spread--light .mag-title-en {
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.7);
     }
 
     /* Description */
     .mag-desc {
       font-family: 'Noto Serif SC', 'Playfair Display', Georgia, serif;
-      font-size: clamp(14px, 1.3vw, 20px);
+      font-size: clamp(17px, 1.6vw, 24px);
       line-height: 2;
-      color: #4a4640;
+      color: rgba(255,255,255,0.95);
       max-width: 480px;
-    }
+    
+      text-shadow: 0 1px 10px rgba(0,0,0,0.4);}
     .mag-spread--light .mag-desc {
-      color: rgba(255,255,255,0.88);
+      color: rgba(255,255,255,0.95);
     }
     .mag-desc-role {
       display: block;
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #a09b91;
+      color: rgba(255,255,255,0.6);
       margin-top: 20px;
-    }
+    
+      text-shadow: 0 1px 6px rgba(0,0,0,0.3);}
     .mag-spread--light .mag-desc-role {
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.6);
     }
 
     /* Minimal CTA */
@@ -762,15 +766,16 @@
       display: inline-block;
       margin-top: 28px;
       font-family: 'Playfair Display', serif;
-      font-size: 13px;
+      font-size: 20px;
       font-weight: 600;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      color: #3a3632;
-      border-bottom: 1px solid #3a3632;
-      padding-bottom: 2px;
-      transition: opacity 0.3s;
-    }
+      color: #fff;
+      border-bottom: 2px solid rgba(255,255,255,0.6);
+      padding-bottom: 4px;
+      transition: opacity 0.3s, border-color 0.3s;
+    
+      text-shadow: 0 1px 6px rgba(0,0,0,0.3);}
     .mag-cta:hover { opacity: 0.6; }
     .mag-spread--light .mag-cta {
       color: #fff;
@@ -843,6 +848,45 @@
     .mag-spread-img--placeholder--coral {
       transition: opacity 1.2s ease;
     }
+    
+    .mag-spread-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    
+    /* Dark gradient overlay for image readability */
+    .mag-spread:not(.mag-spread--light)::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60%;
+      height: 70%;
+      background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    
+    .mag-cta:hover {
+      opacity: 0.75;
+      border-bottom-color: #fff;
+    }
+
+    
+    /* Project introduction (in place of title) */
+    .mag-intro {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, serif;
+      font-size: clamp(15px, 1.4vw, 21px);
+      line-height: 1.8;
+      color: rgba(255,255,255,0.9);
+      max-width: 480px;
+      margin-top: 16px;
+      text-shadow: 0 1px 10px rgba(0,0,0,0.4);
+    }
+
     /* ========== END PROJECTS (MAGAZINE) ========== */
 
     
@@ -906,7 +950,7 @@
       margin-bottom: 8px;
     }
     .flip-front p {
-      font-size: 13px; color: var(--text-light);
+      font-size: 16px; color: var(--text-light);
     }
 
     .flip-back {
@@ -1092,8 +1136,10 @@
       gap: 16px !important;
       padding: 24px 20px !important;
     }
-    .mag-title { letter-spacing: -2px; }
-    .mag-title-en { font-size: 10px; letter-spacing: 2px; margin-top: 8px; }
+    .mag-title { letter-spacing: -2px; 
+      color: #fff;}
+    .mag-title-en { font-size: 10px; letter-spacing: 2px; margin-top: 8px; 
+      color: rgba(255,255,255,0.7);}
     .mag-desc p { font-size: 14px; line-height: 1.9; }
     .mag-page-mark--top-right { right: 20px; top: 16px; font-size: 9px; }
     .mag-whitespace { height: 80px; }
@@ -1352,8 +1398,714 @@
     <div class="mag-spread fade-up" id="spreadYingling">
 
       <!-- Immersive image area (placeholder) -->
-      <div class="mag-spread-img mag-spread-img--placeholder">
-        <!-- REPLACE WITH: <img src="images/projects/yingling-hero.jpg" alt="影灵灵"> -->
+      <div class="mag-spread-img" style="background:none;overflow:hidden;">
+        <img src="images/projects/yingling-hero.jpg" alt="影灵灵">
+      </div>
+
+      <!-- Page mark (editorial) -->
+      <span class="mag-page-mark mag-page-mark--top-right">01 &mdash; 2025&ndash;2026</span>
+
+      <!-- Typography: overapping bottom-left -->
+      <div class="mag-typo mag-typo--bottom-left">
+        <div>
+          <div class="mag-rule"></div>
+          <span class="mag-title-en">AI Shadow Puppet Cultural IP</span>
+          <p class="mag-intro">通过结构化 Prompt 工程和多模态管线设计，让皮影角色在不同场景中保持统一视觉形象，构建从文本到图像再到视频的完整 AIGC 内容生产线。</p>
+        </div>
+        <div>
+          <br>
+          <a href="yingling-project.html" class="mag-cta">Read the story &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-width whitespace divider (editorial feel) -->
+        <div class="mag-whitespace"></div>
+
+    <!-- ====== SPREAD 2: 飞书自动化 ====== -->
+    <div class="mag-spread mag-spread--light fade-up" id="spreadFeishu">
+
+      <!-- Immersive image area (placeholder) -->
+      <div class="mag-spread-img mag-spread-img--placeholder--coral">
+        <!-- REPLACE WITH: <img src="images/projects/feishu-hero.jpg" alt="飞书自动化"> -->
+      </div>
+
+      <!-- Page mark (editorial) -->
+      <span class="mag-page-mark mag-page-mark--top-right">02 &mdash; 2026</span>
+
+      <!-- Typography: overapping center-right -->
+      <div class="mag-typo" style="position:absolute;top:50%;transform:translateY(-50%);grid-template-columns:1fr 1.2fr;align-items:center;">
+        <div></div><!-- spacer -->
+        <div>
+          <div class="mag-rule mag-rule--right"></div>
+          <span class="mag-title-en" style="color:rgba(255,255,255,0.5);">Feishu Automation System</span>
+          <h2 class="mag-title" style="color:#fff;">飞书自动化</h2>
+          <p class="mag-desc" style="color:rgba(255,255,255,0.85);max-width:420px;margin-left:auto;">
+            设计零代码自动化拼单系统，
+            将需求响应时间从 30 分钟压缩至 5 秒，
+            成功率由 40% 提升至 75%。
+          </p>
+          <span class="mag-desc-role" style="color:rgba(255,255,255,0.45);display:block;text-align:right;">Project Lead &middot; Jun 2026</span>
+          <br>
+          <a href="feishu-project.html" class="mag-cta" style="color:#fff;border-bottom-color:rgba(255,255,255,0.6);float:right;">View case study &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <hr class="section-divider">
+
+<!-- ==================== 05 CONTACT ==================== -->
+  <section class="section contact-section" id="contact" style="position:relative;overflow:hidden;">
+
+    <!-- Decorative SVG: Stack of books (left) -->
+    <svg class="contact-deco-left" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="50" width="90" height="12" rx="2" fill="#d8d2c4" stroke="#b8b0a0" stroke-width="1"/>
+      <rect x="15" y="38" width="82" height="12" rx="2" fill="#e0dbd0" stroke="#b8b0a0" stroke-width="1"/>
+      <rect x="8" y="62" width="94" height="12" rx="2" fill="#cec8bc" stroke="#b8b0a0" stroke-width="1"/>
+      <rect x="20" y="26" width="70" height="12" rx="2" fill="#e8e4dc" stroke="#b8b0a0" stroke-width="1"/>
+      <text x="28" y="59" font-family="'Noto Serif SC',serif" font-size="8" fill="#999" font-style="italic">DESIGN</text>
+      <text x="22" y="71" font-family="'Noto Serif SC',serif" font-size="8" fill="#999" font-style="italic">CREATE</text>
+    </svg>
+
+    <!-- Decorative SVG: Winged shoe (right) -->
+    <svg class="contact-deco-right" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 78 C10 78, 5 68, 8 55 C12 40, 28 22, 52 15 C76 8, 98 12, 108 22 C114 28, 112 38, 105 44 C95 52, 78 54, 58 56 L55 62 C52 68, 46 74, 38 76 L34 82 L30 78 Z"
+            fill="#5c5c42" stroke="#3d3d2e" stroke-width="1.5"/>
+      <path d="M52 15 C56 6, 72 0, 88 4 C96 6, 102 12, 100 18 C98 24, 88 26, 78 22 C68 18, 58 14, 52 15Z"
+            fill="#7a7a56" stroke="#3d3d2e" stroke-width="1.2"/>
+      <path d="M66 8 C70 2, 84 -2, 96 2 C102 4, 106 10, 104 15"
+            fill="none" stroke="#7a7a56" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M74 4 C78 -1, 90 -3, 99 1" fill="none" stroke="#7a7a56" stroke-width="1" stroke-linecap="round"/>
+      <line x1="80" y1="5" x2="92" y2="2" stroke="#7a7a56" stroke-width="0.8"/>
+      <line x1="84" y1="8" x2="97" y2="6" stroke="#7a7a56" stroke-width="0.8"/>
+      <line x1="86" y1="12" x2="100" y2="11" stroke="#7a7a56" stroke-width="0.8"/>
+      <text x="38" y="58" font-family="serif" font-size="14" font-weight="bold" fill="#f8f6f1">25</text>
+    </svg>
+
+    <div class="contact-layout fade-up">
+      <p class="contact-email-line">Partnerships, Collaboration & Hello's</p>
+
+      <div class="contact-big-name">ZENG</div>
+
+      <p class="contact-email">
+        <a href="mailto:LinWan1020@163.com">LinWan1020@163.com</a>
+      </p>
+
+      <p class="contact-secondary">
+        WeChat: <a href="javascript:void(0);" onclick="copyWechat();return false;" style="cursor:pointer;">Zzing1018</a>
+        &nbsp;|&nbsp;
+        <a href="曾银晶_简历.pdf" download>Download Resume PDF ↗</a>
+      </p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div>&copy; 2026 曾银晶 &middot; All rights reserved.</div>
+    <div class="footer-links">
+      <a href="mailto:LinWan1020@163.com">Email</a>
+      <a href="javascript:void(0);" onclick="copyWechat()">WeChat</a>
+      <a href="https://space.bilibili.com/2031015294" target="_blank">Bilibili</a>
+    </div>
+  </footer>
+
+
+  <!-- ==================== TOAST ==================== -->
+  <div class="toast" id="toast">微信号已复制 ✓</div>
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // =====================================================
+    //  AVATAR PRIORITY DETECTION FUNCTION
+    //  Tries avatar.png → avatar.jpg → avatar.jpeg in order.
+    //  Sets elegant placeholder if none found.
+    // =====================================================
+
+    /**
+     * Detects and loads an avatar image from local files.
+     * Priority order: avatar.png > avatar.jpg > avatar.jpeg
+     * Falls back gracefully to placeholder if none exist.
+     */
+    function loadAvatar() {
+      const formats = ['png', 'jpg', 'jpeg'];
+      let attempted = 0;
+
+      formats.forEach(function(ext) {
+        var img = new Image();
+        img.onload = function() {
+          // Success! Apply this image to both hero avatar and about photo
+          setAvatarImage(img.src);
+        };
+        img.onerror = function() {
+          attempted++;
+          // If all formats failed, keep the placeholder visible
+          if (attempted >= formats.length) {
+            console.log('[Avatar] No avatar file found (tried: avatar.png/jpg/jpeg). Showing placeholder.');
+          }
+        };
+        img.src = ext === 'png' ? 'avatar.png' : (ext === 'jpg' ? 'avatar.jpg' : 'avatar.jpeg');
+      });
+    }
+
+    /**
+     * Applies the detected avatar URL to all avatar containers
+     */
+    function setAvatarImage(src) {
+      // Hero circular avatar
+      var heroAvatar = document.getElementById('heroAvatar');
+      if (heroAvatar) {
+        heroAvatar.innerHTML = '<img src="' + src + '" alt="曾银晶" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      }
+
+      // About photo frame
+      var aboutImg = document.getElementById('aboutAvatarImg');
+      var aboutPlaceholder = document.getElementById('aboutPlaceholder');
+      if (aboutImg) {
+        aboutImg.src = src;
+        aboutImg.style.opacity = '1';
+        aboutImg.style.position = 'absolute';
+        aboutImg.style.inset = '0';
+        aboutImg.style.width = '100%';
+        aboutImg.style.height = '100%';
+        aboutImg.style.objectFit = 'cover';
+        if (aboutPlaceholder) aboutPlaceholder.style.display = 'none';
+      }
+    }
+
+
+    // =====================================================
+    //  MOBILE NAVIGATION
+    // =====================================================
+
+    function toggleMobileNav() {
+      var toggle = document.getElementById('menuToggle');
+      var nav = document.getElementById('mobileNav');
+      toggle.classList.toggle('active');
+      nav.classList.toggle('show');
+    }
+
+    function closeMobileNav() {
+      var toggle = document.getElementById('menuToggle');
+      var nav = document.getElementById('mobileNav');
+      if (toggle) toggle.classList.remove('active');
+      if (nav) nav.classList.remove('show');
+    }
+
+
+    // =====================================================
+    //  SMOOTH SCROLL FOR NAV LINKS (desktop + mobile)
+    // =====================================================
+
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('[data-target]');
+      if (!link) return;
+      e.preventDefault();
+      var targetId = link.getAttribute('data-target');
+      var targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        closeMobileNav();
+        var offsetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - 70;
+        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+      }
+    });
+
+
+    // =====================================================
+    //  WECHAT COPY TO CLIPBOARD
+    // =====================================================
+
+    function copyWechat() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText('Zzing1018').then(function() {
+          showToast();
+        });
+      } else {
+        // Fallback for older browsers
+        var input = document.createElement('input');
+        input.value = 'Zzing1018';
+        document.body.appendChild(input);
+        input.select();
+        try { document.execCommand('copy'); showToast(); } catch(err) {}
+        document.body.removeChild(input);
+      }
+    }
+
+    function showToast() {
+      var toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(function() { toast.classList.remove('show'); }, 2200);
+    }
+
+
+    // =====================================================
+    //  SCROLL ANIMATIONS (Intersection Observer)
+    // =====================================================
+
+    function initScrollAnimations() {
+      var elements = document.querySelectorAll('.fade-up');
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+
+              // Animate skill bars inside this element
+              var bars = entry.target.querySelectorAll('.skill-bar-fill');
+              bars.forEach(function(bar) {
+                var w = bar.getAttribute('data-width');
+                if (w) setTimeout(function() { bar.style.width = w + '%'; }, 200);
+              });
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        elements.forEach(function(el) { observer.observe(el); });
+      } else {
+        // Fallback: just show everything
+        elements.forEach(function(el) { el.classList.add('visible'); });
+        document.querySelectorAll('.skill-bar-fill').forEach(function(bar) {
+          bar.style.width = bar.getAttribute('data-width') + '%';
+        });
+      }
+    }
+
+
+    // =====================================================
+    //  INITIALIZATION ON DOM READY
+    // =====================================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // Load avatar image with priority detection
+      loadAvatar();
+
+      // Initialize scroll-triggered animations
+      initScrollAnimations();
+
+      // Navbar background enhancement on scroll
+      var navbar = document.getElementById('navbar');
+      var lastScroll = 0;
+      window.addEventListener('scroll', function() {
+        var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollY > 80) {
+          navbar.style.boxShadow = '0 1px 20px rgba(0,0,0,0.06)';
+        } else {
+          navbar.style.boxShadow = 'none';
+        }
+        lastScroll = scrollY;
+      });
+
+      // Close mobile nav on outside click
+      document.addEventListener('click', function(e) {
+        var mobileNav = document.getElementById('mobileNav');
+        var menuToggle = document.getElementById('menuToggle');
+        if (mobileNav && mobileNav.classList.contains('show')) {
+          if (!mobileNav.contains(e.target) && !menuToggle.contains(e.target)) {
+            closeMobileNav();
+          }
+        }
+      });
+
+    });
+
+    // Also run loadAvatar immediately as backup
+    // (handles case where DOMContentLoaded already fired)
+    if (document.readyState !== 'loading') {
+      loadAvatar();
+    }
+    // ===== Poker Stack Switch =====
+
+  /* -- Flip card hover control (JS) -- */
+  (function() {
+    var cards = document.querySelectorAll('.flip-card');
+    for (var i = 0; i < cards.length; i++) {
+      (function(c) {
+        var flipping = false;
+        c.addEventListener('mouseenter', function() {
+          if (flipping) return;
+          flipping = true;
+          c.classList.add('flipped');
+          setTimeout(function() { flipping = false; }, 400);
+        });
+        c.addEventListener('mouseleave', function() {
+          if (flipping) return;
+          flipping = true;
+          c.classList.remove('flipped');
+          setTimeout(function() { flipping = false; }, 400);
+        });
+      })(cards[i]);
+    }
+  })();
+
+  (function() {
+    var stack = document.getElementById('pokerStack');
+    if (!stack) return;
+    var cards = stack.querySelectorAll('.poker-card');
+    var dots = stack.querySelectorAll('.poker-dot');
+    var current = 0;  // photo.jpg is first card
+
+    function updatePeek() {
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('next', 'behind');
+      }
+      var nextIdx = (current + 1) % cards.length;
+      // Use setTimeout to ensure class removal takes effect first
+      var nxt = cards[nextIdx];
+      nxt.classList.add('next');
+      if (cards.length > 2) {
+        var behindIdx = (current + 2) % cards.length;
+        if (behindIdx !== nextIdx) {
+          cards[behindIdx].classList.add('behind');
+        }
+      }
+    }
+
+    function switchCard(idx) {
+      if (idx === current) return;
+      var oldCard = stack.querySelector('.poker-card.active');
+      var dir = idx > current ? 1 : -1;
+      // Remove peek classes immediately
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('next', 'behind');
+      }
+      if (oldCard) {
+        oldCard.style.transform = 'translateY(' + (-dir * 30) + 'px) scale(0.92) rotate(' + (dir * -8) + 'deg)';
+        oldCard.style.opacity = '0';
+        oldCard.classList.remove('active');
+      }
+      setTimeout(function() {
+        var newCard = cards[idx];
+        newCard.style.transform = 'translateY(' + (dir * 20) + 'px) scale(0.95) rotate(' + (dir * 3) + 'deg)';
+        newCard.style.opacity = '0';
+        newCard.classList.add('active');
+        current = idx;
+        // Update dots
+        for (var i = 0; i < dots.length; i++) {
+          dots[i].classList.toggle('active', i === current);
+        }
+        // Clear inline styles so CSS classes can take effect
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            newCard.style.transform = '';
+            newCard.style.opacity = '';
+            // Now apply peek effect after transition completes
+            setTimeout(function() { updatePeek(); }, 50);
+          });
+        });
+      }, 200);
+    }
+
+    updatePeek();  // init peek
+
+    stack.addEventListener('click', function(e) {
+      if (e.target.closest('.poker-dot')) return;
+      switchCard((current + 1) % cards.length);
+    });
+    for (var di = 0; di < dots.length; di++) {
+      (function(idx) {
+        dots[idx].addEventListener('click', function(e) {
+          e.stopPropagation();
+          switchCard(idx);
+        });
+      })(di);
+    }
+    stack.setAttribute('tabindex', '0');
+    stack.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') switchCard((current - 1 + cards.length) % cards.length);
+      else if (e.key === 'ArrowRight') switchCard((current + 1) % cards.length);
+    });
+  })();
+
+</script>
+
+
+  <!-- Card Enlarge Modal -->
+  <div class="card-modal-overlay" id="cardModal">
+    <div class="card-modal-box">
+      <button class="card-modal-close" onclick="closeCardModal()">&times;</button>
+      <div class="modal-icon" id="modalIcon"></div>
+      <h4 id="modalTitle"></h4>
+      <p id="modalBody"></p>
+    </div>
+  </div>
+
+  <script>
+    function openCardModal(cardEl) {
+      var back = cardEl.querySelector('.flip-back');
+      if (!back) return;
+      var icon = cardEl.querySelector('.flip-front-icon');
+      var title = back.querySelector('h4');
+      var body = back.querySelector('p:not(.flip-hint)');
+      document.getElementById('modalIcon').innerHTML = icon ? icon.innerHTML : '';
+      document.getElementById('modalTitle').innerHTML = title ? title.innerHTML : '';
+      document.getElementById('modalBody').innerHTML = body ? body.innerHTML : '';
+      document.getElementById('cardModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCardModal() {
+      document.getElementById('cardModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('cardModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCardModal();
+    });
+  </script>
+
+  /* -- floating tags stagger delay -- */
+  (function() {
+    var tags = document.querySelectorAll('.float-tag');
+    tags.forEach(function(tag, i) {
+      tag.style.setProperty('--d', i);
+    });
+  })();
+</body>
+</html><div class="mag-spread-img" style="background:none;overflow:hidden;">
+        <img src="images/projects/yingling-hero.jpg" alt="影灵灵">
+      </div>
+
+    <div class="nav-links">
+      <a class="nav-link" data-target="hero">Home</a>
+      <a class="nav-link" data-target="about">About</a>
+      <a class="nav-link" data-target="projects">Project</a>
+      <a class="nav-link" data-target="contact">Contact</a>
+    </div>
+
+
+    <!-- Mobile hamburger -->
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile navigation overlay -->
+  <div class="mobile-nav" id="mobileNav">
+    <a data-target="hero" onclick="closeMobileNav()">Home</a>
+    <a data-target="about" onclick="closeMobileNav()">About</a>
+    <a data-target="projects" onclick="closeMobileNav()">Project</a>
+    <a data-target="contact" onclick="closeMobileNav()">Contact</a>
+  </div>
+
+
+  <!-- ==================== 01 HERO / HOME ==================== -->
+  <section class="hero" id="hero">
+
+    <!-- Decorative SVG: Winged shoe (Ordr-inspired) -->
+    <svg class="hero-deco-wing" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 78 C10 78, 5 68, 8 55 C12 40, 28 22, 52 15 C76 8, 98 12, 108 22 C114 28, 112 38, 105 44 C95 52, 78 54, 58 56 L55 62 C52 68, 46 74, 38 76 L34 82 L30 78 Z"
+            fill="#3d3d2e" stroke="#3d3d2e" stroke-width="1.5"/>
+      <path d="M52 15 C56 6, 72 0, 88 4 C96 6, 102 12, 100 18 C98 24, 88 26, 78 22 C68 18, 58 14, 52 15Z"
+            fill="#5c5c42" stroke="#3d3d2e" stroke-width="1.2"/>
+      <path d="M66 8 C70 2, 84 -2, 96 2 C102 4, 106 10, 104 15"
+            fill="none" stroke="#5c5c42" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M74 4 C78 -1, 90 -3, 99 1" fill="none" stroke="#5c5c42" stroke-width="1" stroke-linecap="round"/>
+      <!-- Wing feather lines -->
+      <line x1="80" y1="5" x2="92" y2="2" stroke="#5c5c42" stroke-width="0.8"/>
+      <line x1="84" y1="8" x2="97" y2="6" stroke="#5c5c42" stroke-width="0.8"/>
+      <line x1="86" y1="12" x2="100" y2="11" stroke="#5c5c42" stroke-width="0.8"/>
+      <!-- Shoe number -->
+      <text x="38" y="58" font-family="serif" font-size="14" font-weight="bold" fill="#f8f6f1">25</text>
+      <!-- Sole detail -->
+      <path d="M12 74 C10 76, 14 80, 22 79" stroke="#3d3d2e" stroke-width="1" fill="none"/>
+    </svg>
+
+    <p class="hero-label">Portfolio &mdash; 2026</p>
+
+    <h1 class="hero-title">ZENG YINJING</h1>
+    <p class="hero-subtitle">Designing at the intersection of AI and Culture.</p>
+
+    <p class="hero-tagline">
+      广外市场营销 &middot; AIGC 内容生产<br>
+      用生成式 AI 重构文化叙事，让影灵灵在数字世界活起来。
+    </p>
+
+    <!-- Avatar — JS will detect and load the image -->
+    <div class="hero-avatar-wrapper fade-up">
+      <div class="hero-avatar" id="heroAvatar">
+        <div class="avatar-placeholder">曾</div>
+      </div>
+    </div>
+
+    <!-- Large decorative letter -->
+    <div class="hero-deco-letter">Z</div>
+
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+
+  <!-- ==================== 02 ABOUT ME ==================== -->
+  <section class="section about-section" id="about">
+
+    <h2 class="section-heading fade-up">ABOUT ME</h2>
+    
+    <!-- ===== 四象限布局：教育 / 实习 / 项目 / 技能 ===== -->
+    <div class="quadrant-wrap fade-up">
+      <div class="quadrant-grid">
+        
+        <!-- 左上：教育背景 -->
+        <div class="q-cell q-tl">
+          <h4>EDUCATION</h4>
+          <p><strong>广东外语外贸大学 · 商学院</strong></p>
+          <p>市场营销专业 · 本科（2024 – 2028）</p>
+          <p>GPA <strong>3.76 / 4.0</strong>（前 15%）</p>
+          <p>相关课程：电子商务、市场营销学、营销英语、商务英语</p>
+          <p>荣誉奖励：优秀学生三等奖学金</p>
+        </div>
+
+        <!-- 右上：实习经历 -->
+        <div class="q-cell q-tr">
+          <h4>INTERNSHIP</h4>
+          <p><strong>中国对外贸易广州物业发展有限公司</strong></p>
+          <p>贸易促进部 · 文创门店实习生（2026.04 – 2026.05）</p>
+          <p>负责文创产品销量与库存数据统计，梳理热销及滞销单品特点，为选品与补货提供参考依据。</p>
+          <p>协助门店日常运营、货品统筹及客群接待，面向海内外参展客商进行产品讲解与推介。</p>
+        </div>
+
+        <!-- 左下：项目经历 -->
+        <div class="q-cell q-bl">
+          <h4>PROJECTS</h4>
+          <p><strong>🎭 影灵灵 · AI 皮影文化 IP</strong></p>
+          <p>AIGC × 非遗皮影戏 · 2025 – 至今</p>
+          <p>设计角色一致性控制系统（Role Lock + Style Anchor），搭建多模态内容生产流程，产出角色设定手册、宣传海报及 B 站原创短片。</p>
+          <br>
+          <p><strong>⚡ 飞书自动化拼单通知系统</strong></p>
+          <p>项目负责人 · 2026.06</p>
+          <p>设计「飞书表单→多维表格→群机器人」自动化链路，需求响应时间从 30 分钟压缩至 5 秒，建立标准化运营工具资产。</p>
+        </div>
+
+        <!-- 右下：个人技能 -->
+        <div class="q-cell q-br">
+          <h4>SKILLS</h4>
+          <p><strong>英语水平</strong></p>
+          <p>CET-6（550+），具备良好的英语读写与口语交流能力。</p>
+          <br>
+          <p><strong>办公软件</strong></p>
+          <p>熟练使用 Word、Excel、PowerPoint 等办公软件，具备数据分析与文档排版能力。</p>
+          <br>
+          <p><strong>AIGC 工具</strong></p>
+          <p>熟练使用 Midjourney、Runway、即梦等 AI 创作工具，具备 Prompt 工程与多模态内容生产能力。</p>
+        </div>
+
+
+      </div><!-- /.quadrant-grid -->
+    </div><!-- /.quadrant-wrap -->
+
+
+    <div class="about-grid">
+      <!-- Left: Photo + Name -->
+      <div class="about-photo-col fade-up">
+        <!-- Poker Card Stack Photos -->
+        <div class="poker-stack" id="pokerStack">
+          <!-- Card 0: 证件照 -->
+          <div class="poker-card active" data-index="0" data-label="ID Photo">
+            <img src="images/about/photo.jpg" alt="证件照" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <!-- Card 1: 好宝BEE -->
+          <div class="poker-card" data-index="1" data-label="Haobao BEE">
+            <img src="images/about/haobao-bee.jpg" alt="好宝 BEE 合照" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <!-- Card 2: 粉色外套 -->
+          <div class="poker-card" data-index="2" data-label="Pink Jacket">
+            <img src="images/about/pink-jacket.jpg" alt="粉色外套" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <!-- Card 3: 小熊合照 -->
+          <div class="poker-card" data-index="3" data-label="Bear Photo">
+            <img src="images/about/bear-photo.jpg" alt="小熊合照" draggable="false">
+            <div class="poker-card-border"></div></div>
+          <div class="poker-dots">
+            <span class="poker-dot active" data-target="0"></span>
+            <span class="poker-dot" data-target="1"></span>
+            <span class="poker-dot" data-target="2"></span>
+            <span class="poker-dot" data-target="3"></span>
+          </div>
+        </div>
+        <div class="about-name-badge">
+          <h3>曾银晶 / Crystal</h3>
+          <p>Zeng Yinjing &middot; Guangzhou</p>
+        </div>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="about-info-col fade-up">
+        <p>
+          你好，我是<strong>曾银晶</strong>，广东外语外贸大学商学院
+          市场营销专业（2024–2028），GPA <strong>3.76 / 4.0</strong>（前 15%），
+          获优秀学生三等奖学金。
+        </p>
+        <p>
+          我是一名<strong>AIGC 内容创作者</strong>与<strong>文化 IP 设计者</strong>。
+          我相信设计不仅是视觉的呈现，更是叙事的载体。
+          通过 Prompt 工程、多模态管线设计和 AI 工具链，
+          我让传统文化以全新的方式在数字世界中被看见、被记住、被喜爱。
+        </p>
+        <p>
+          核心项目「<strong>影灵灵 · AI 皮影文化 IP</strong>」，
+          从角色设计到 B 站原创短片，完整实践了 AIGC 内容生产全流程。
+          另有<strong>飞书自动化拼单系统</strong>项目，
+          通过零代码自动化设计，将需求响应时间从 30 分钟压缩至 5 秒。
+        </p>
+        <p>
+          曾在<strong>中国对外贸易广州物业发展有限公司</strong>实习，
+          负责文创产品数据分析与客群接待，具备扎实的商务沟通与运营支持能力。
+        </p>
+
+
+      </div>
+    </div>
+
+
+    
+
+    <!-- ===== SKILLS ===== -->
+    <div class="skills-section fade-up">
+      <h3>Skills & Expertise</h3>
+
+      <div class="floating-tags" id="floatingTags">
+        <span class="float-tag tag-lg" data-delay="0">Prompt 工程</span>
+        <span class="float-tag tag-md" data-delay="1">AIGC 内容生产</span>
+        <span class="float-tag tag-sm" data-delay="2">视觉一致性控制</span>
+        <span class="float-tag tag-md" data-delay="3">飞书自动化 / 低代码</span>
+        <span class="float-tag tag-sm" data-delay="4">跨团队协作与沟通</span>
+        <span class="float-tag tag-lg" data-delay="5">项目管理与执行</span>
+        <span class="float-tag tag-md" data-delay="6">创意叙事能力</span>
+        <span class="float-tag tag-sm" data-delay="7">快速学习新技术工具</span>
+        <span class="float-tag tag-md" data-delay="8">中英双语表达能力</span>
+        <span class="float-tag tag-sm" data-delay="9">用户研究与洞察</span>
+      </div>
+    </div>
+
+  </section>
+
+  <hr class="section-divider">
+
+
+        <!-- ==================== 03 PROJECTS (Magazine Spreads) ==================== -->
+  <section id="projects">
+
+    <!-- Minimal editorial masthead -->
+    <div class="mag-masthead fade-up">
+      <span class="mag-masthead-num">03</span>
+      <div class="mag-masthead-text">
+        <h2>PROJECTS</h2>
+        <p>Selected work &middot; 2025 &ndash; 2026</p>
+      </div>
+    </div>
+
+    <!-- ====== SPREAD 1: 影灵灵 ====== -->
+    <div class="mag-spread fade-up" id="spreadYingling">
+
+      <!-- Immersive image area (placeholder) -->
+      <div class="mag-spread-img" style="background:none;overflow:hidden;">
+        <img src="images/projects/yingling-hero.jpg" alt="影灵灵">
       </div>
 
       <!-- Page mark (editorial) -->
