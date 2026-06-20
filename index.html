@@ -149,32 +149,6 @@
     .nav-link:hover { opacity: 1; }
     .nav-link:hover::after { transform: scaleX(1); }
 
-    .nav-cta {
-      font-family: var(--font-sans);
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      padding: 7px 18px;
-      background: var(--text-dark);
-      color: var(--bg-primary);
-      border-radius: var(--radius-pill);
-      transition: all 0.5s var(--ease-lux);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .nav-cta:hover {
-      transform: scale(0.97);
-      opacity: 1;
-    }
-    .nav-cta-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--accent-mint);
-      animation: pulse 2s var(--ease-spring) infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
     /* Mobile menu button */
     .menu-toggle {
       display: none;
@@ -1066,9 +1040,9 @@
       position: absolute; bottom: 15%; left: 5%;
       width: 100px; opacity: 0.5;
     }
-    .contact-deco-right {
-      position: absolute; top: 20%; right: 6%;
-      width: 90px; opacity: 0.5;
+    .contact-deco-left {
+      position: absolute; top: 0%; left: 6%;
+      width: 100px; opacity: 0.5;
     }
 
     /* ============================================
@@ -1108,7 +1082,6 @@
     @media (max-width: 900px) {
       .navbar { padding: 8px 20px; gap: 20px; }
       .nav-links { display: none; }
-      .nav-cta { display: none; }
       .menu-toggle { display: flex; }
 
       .section { padding: 80px 24px; }
@@ -1163,7 +1136,7 @@
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
       .footer-links { justify-content: center; }
 
-      .contact-deco-left, .contact-deco-right { display: none; }
+      .contact-deco-left { display: none; }
     }
 
     /* ============================================
@@ -1209,15 +1182,10 @@
     <div class="nav-logo">曾银晶</div>
 
     <div class="nav-links">
-      <a class="nav-link" data-target="hero">Home</a>
-      <a class="nav-link" data-target="about">About</a>
-      <a class="nav-link" data-target="projects">Project</a>
-      <a class="nav-link" data-target="contact">Contact</a>
-    </div>
-
-    <div class="nav-cta" data-target="contact" style="cursor:pointer;">
-      <span class="nav-cta-dot"></span>
-      Available
+      <a class="nav-link" data-target="hero">首页</a>
+      <a class="nav-link" data-target="about">关于</a>
+      <a class="nav-link" data-target="projects">项目</a>
+      <a class="nav-link" data-target="contact">联系</a>
     </div>
 
     <!-- Mobile hamburger — X morph -->
@@ -1228,10 +1196,10 @@
 
   <!-- Mobile navigation — Fullscreen glass overlay -->
   <div class="mobile-nav" id="mobileNav">
-    <a data-target="hero" onclick="closeMobileNav()">Home</a>
-    <a data-target="about" onclick="closeMobileNav()">About</a>
-    <a data-target="projects" onclick="closeMobileNav()">Project</a>
-    <a data-target="contact" onclick="closeMobileNav()">Contact</a>
+    <a data-target="hero" onclick="closeMobileNav()">首页</a>
+    <a data-target="about" onclick="closeMobileNav()">关于</a>
+    <a data-target="projects" onclick="closeMobileNav()">项目</a>
+    <a data-target="contact" onclick="closeMobileNav()">联系</a>
   </div>
 
 
@@ -1494,21 +1462,6 @@
       <rect x="20" y="26" width="70" height="12" rx="2" fill="#e8e4dc" stroke="#b8b0a0" stroke-width="1"/>
       <text x="28" y="59" font-family="'Noto Serif SC',serif" font-size="8" fill="#999" font-style="italic">DESIGN</text>
       <text x="22" y="71" font-family="'Noto Serif SC',serif" font-size="8" fill="#999" font-style="italic">CREATE</text>
-    </svg>
-
-    <!-- Decorative SVG: Winged shoe (right) -->
-    <svg class="contact-deco-right" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 78 C10 78, 5 68, 8 55 C12 40, 28 22, 52 15 C76 8, 98 12, 108 22 C114 28, 112 38, 105 44 C95 52, 78 54, 58 56 L55 62 C52 68, 46 74, 38 76 L34 82 L30 78 Z"
-            fill="#5c5c42" stroke="#3d3d2e" stroke-width="1.5"/>
-      <path d="M52 15 C56 6, 72 0, 88 4 C96 6, 102 12, 100 18 C98 24, 88 26, 78 22 C68 18, 58 14, 52 15Z"
-            fill="#7a7a56" stroke="#3d3d2e" stroke-width="1.2"/>
-      <path d="M66 8 C70 2, 84 -2, 96 2 C102 4, 106 10, 104 15"
-            fill="none" stroke="#7a7a56" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M74 4 C78 -1, 90 -3, 99 1" fill="none" stroke="#7a7a56" stroke-width="1" stroke-linecap="round"/>
-      <line x1="80" y1="5" x2="92" y2="2" stroke="#7a7a56" stroke-width="0.8"/>
-      <line x1="84" y1="8" x2="97" y2="6" stroke="#7a7a56" stroke-width="0.8"/>
-      <line x1="86" y1="12" x2="100" y2="11" stroke="#7a7a56" stroke-width="0.8"/>
-      <text x="38" y="58" font-family="serif" font-size="14" font-weight="bold" fill="#f8f6f1">25</text>
     </svg>
 
     <div class="contact-layout fade-up">
