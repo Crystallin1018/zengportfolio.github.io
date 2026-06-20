@@ -624,7 +624,7 @@
   </div>
 
   <!-- ============ JOIN FORM MODAL ============ -->
-  <div class="form-modal-overlay" id="joinFormOverlay">
+  <div class="form-modal-overlay" id="joinFormOverlay" style="z-index:3200;">
     <div class="form-modal" style="max-width:400px;">
       <div class="form-modal-header">
         <div class="form-modal-title">加入拼单</div>
@@ -833,7 +833,8 @@
 
     var joinCount = 0;
     function joinOrder() {
-      // Open personal info form instead of directly joining
+      // Hide message card first, then open personal info form
+      document.getElementById('msgCardOverlay').classList.remove('active');
       document.getElementById('joinFormOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
