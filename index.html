@@ -411,7 +411,7 @@
 
 #about { padding-top: 56px; padding-bottom: 56px; }
 
-    /* About Intro — photo + bio above card */
+    /* About Intro — photo stack + bio above card */
     .about-intro {
       max-width: 960px;
       margin: 28px auto 0;
@@ -420,30 +420,56 @@
       gap: 36px;
       padding: 0 32px;
     }
-    .about-intro-photo {
+    /* Photo card stack — two cards, bottom peeks top-right */
+    .about-photo-stack {
       flex-shrink: 0;
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
+      width: 160px;
+      height: 200px;
+      position: relative;
+    }
+    .about-photo-card {
+      position: absolute;
+      width: 140px;
+      height: 180px;
+      border-radius: 10px;
       overflow: hidden;
       background: var(--bg-warm);
-      border: 2px solid var(--border-hairline);
-      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: transform 0.5s var(--ease-spring), opacity 0.5s ease, box-shadow 0.4s ease;
     }
-    .about-intro-photo img {
+    .about-photo-card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none;
+      display: block;
     }
-    .about-intro-photo img.loaded { display: block; }
-    .about-intro-photo .avatar-fallback {
-      font-size: 48px;
-      opacity: 0.35;
+    /* Top card — main position */
+    .about-photo-card.top {
+      z-index: 2;
+      transform: translate(0, 0) rotate(-2deg);
     }
+    /* Bottom card — peek from top-right */
+    .about-photo-card.bottom {
+      z-index: 1;
+      transform: translate(18px, -14px) rotate(3deg);
+      opacity: 0.85;
+    }
+    /* When bottom is active — swap roles */
+    .about-photo-stack.swapped .photo-top {
+      z-index: 1;
+      transform: translate(18px, -14px) rotate(3deg);
+      opacity: 0.85;
+    }
+    .about-photo-stack.swapped .photo-bottom {
+      z-index: 2;
+      transform: translate(0, 0) rotate(-2deg);
+      opacity: 1;
+    }
+    .about-photo-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.1);
+    }
+
     .about-intro-bio {
       flex: 1;
       min-width: 0;
@@ -1087,7 +1113,11 @@
       .about-card-col { padding: 18px 20px; }
 
       .about-intro { gap: 24px; padding: 0 20px; }
-      .about-intro-photo { width: 100px; height: 100px; }
+      .about-photo-stack { width: 130px; height: 165px; }
+      .about-photo-card { width: 115px; height: 148px; }
+      .about-photo-stack.swapped .photo-top { transform: translate(14px, -11px) rotate(3deg); }
+      .about-photo-stack.swapped .photo-bottom { transform: translate(0,0) rotate(-2deg); }
+      .about-photo-card.bottom { transform: translate(14px, -11px) rotate(3deg); }
 
       .mag-masthead { flex-direction: column; align-items: center; gap: 4px; padding: 0 32px 16px; }
       .mag-masthead-num { font-size: 11px; }
@@ -1137,7 +1167,11 @@
       .about-card-col { padding: 16px 18px; }
 
       .about-intro { flex-direction: column; gap: 16px; padding: 0 16px; text-align: center; }
-      .about-intro-photo { width: 90px; height: 90px; }
+      .about-photo-stack { width: 120px; height: 150px; margin: 0 auto; }
+      .about-photo-card { width: 106px; height: 135px; }
+      .about-photo-stack.swapped .photo-top { transform: translate(12px, -10px) rotate(3deg); }
+      .about-photo-stack.swapped .photo-bottom { transform: translate(0,0) rotate(-2deg); }
+      .about-photo-card.bottom { transform: translate(12px, -10px) rotate(3deg); }
       .about-intro-bio p { font-size: 13px; }
 
       .skill-nebula { height: 420px; }
@@ -1267,14 +1301,18 @@
     </div>
     <h2 class="section-heading fade-up">ABOUT ME</h2>
 
-    <!-- Photo + Bio -->
+    <!-- Photo Card Stack + Bio -->
     <div class="about-intro fade-up">
-      <div class="about-intro-photo" id="aboutPhoto">
-        <img id="aboutPhotoImg" alt="曾银晶">
-        <span class="avatar-fallback">&#128100;</span>
+      <div class="about-photo-stack" id="aboutPhotoStack">
+        <div class="about-photo-card top photo-top" onclick="switchAboutPhoto()">
+          <img src="images/about-photo-1.jpg" alt="曾银晶 01">
+        </div>
+        <div class="about-photo-card bottom photo-bottom" onclick="switchAboutPhoto()">
+          <img src="images/about-photo-2.jpg" alt="曾银晶 02">
+        </div>
       </div>
       <div class="about-intro-bio">
-        <p>我是<strong>曾银晶 Crystal</strong>，广东外语外贸大学市场营销专业大二学生。专注于 <strong>AIGC 内容生产</strong>与<strong>无代码自动化</strong>的交叉领域，擅长将 AI 工具融入创意与业务流程，提升内容产出效率与系统性思维能力。热爱非遗文化，正在探索 AI 赋能传统文化传播的创新路径。</p>
+        <p>我是<strong>曾银晶 Crystal</strong>，广东外语外贸大学市场营销专业2028届在读。专注于「<strong>内容创意 × AI 技术 × 自动化系统</strong>」的落地实践，擅长基于 AIGC 工具搭建从脚本策划到图像、视频生成的完整内容生产流水线，并通过提示词工程提升 AI 生成的一致性与可控性。同时具备无代码自动化系统设计能力，能够利用飞书等工具将人工业务流程转化为自动化闭环。在实践中参与过线下文创门店运营与数据分析，能够将用户反馈与数据洞察结合用于业务优化。核心优势在于快速学习新工具，并将其结构化整合成可复用的系统与解决方案。</p>
       </div>
     </div>
 
@@ -1306,7 +1344,7 @@
           <p>设计角色一致性控制系统（Role Lock + Style Anchor），搭建多模态内容生产流程，产出角色设定手册、宣传海报及 B 站原创短片。</p>
           <p><strong>⚡ 飞书自动化拼单通知系统</strong></p>
           <p>项目负责人 · 2026.06</p>
-          <p>设计「飞书表单→多维表格→群机器人」自动化链路，需求响应时间从 30 分钟压缩至 5 秒，建立标准化运营工具资产。</p>
+          <p>设计「飞书表单→多维表格→群机器人」自动化链路，需求发布后 3–5 秒自动触达用户，15 分钟可复用部署同类场景。</p>
         </div>
         <!-- 右下：个人技能 -->
         <div class="about-card-col">
@@ -1364,7 +1402,7 @@
         <div class="project-card-body">
           <span class="project-card-en">AI Shadow Puppet Cultural IP</span>
           <h3 class="project-card-title">影灵灵</h3>
-          <p class="project-card-desc">通过结构化 Prompt 工程和多模态管线设计，让皮影角色在不同场景中保持统一视觉形象，构建从文本到图像再到视频的完整 AIGC 内容生产线。</p>
+          <p class="project-card-desc">设计「文案脚本→生图→生视频→后期合成」标准化 AIGC 生产管线，调用豆包 Seedance 2.0 完成短视频制作，单条周期压缩至 2 小时内。通过固定分镜脚本模板与锚点词库解决角色一致性问题，6 张图角色统一达标。</p>
           <a href="yingling-project.html" class="project-card-cta">
             查看项目详情 <span class="project-card-arrow">→</span>
           </a>
@@ -1372,16 +1410,17 @@
       </div>
 
       <!-- CARD 2: 飞书自动化 -->
-      <div class="project-card project-card--coral" id="spreadFeishu">
-        <div class="project-card-img project-card-img--placeholder">
+      <div class="project-card" id="spreadFeishu">
+        <div class="project-card-img">
+          <img src="images/projects/feishu-cover.jpg" alt="飞书自动化拼单通知系统">
           <span class="project-card-badge">02 &mdash; 2026</span>
         </div>
         <div class="project-card-body">
           <span class="project-card-en">Feishu Automation System</span>
           <h3 class="project-card-title">飞书自动化</h3>
-          <p class="project-card-desc">设计零代码自动化拼单系统，将需求响应时间从 30 分钟压缩至 5 秒，成功率由 40% 提升至 75%。</p>
+          <p class="project-card-desc">设计「飞书表单→多维表格→群机器人」自动化链路，需求发布后 3–5 秒自动触达用户，构建完整流程闭环。15 分钟可复用部署同类场景。</p>
           <span class="project-card-role">Project Lead · Jun 2026</span>
-          <a href="feishu-project.html" class="project-card-cta project-card-cta--coral">
+          <a href="feishu-project.html" class="project-card-cta">
             查看项目详情 <span class="project-card-arrow">→</span>
           </a>
         </div>
@@ -1470,14 +1509,17 @@
       if (heroAvatar) {
         heroAvatar.innerHTML = '<img src="' + src + '" alt="曾银晶" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
       }
-      // Also set about-intro photo
-      var aboutImg = document.getElementById('aboutPhotoImg');
-      var aboutFallback = document.querySelector('#aboutPhoto .avatar-fallback');
-      if (aboutImg) {
-        aboutImg.src = src;
-        aboutImg.classList.add('loaded');
-        if (aboutFallback) aboutFallback.style.display = 'none';
-      }
+    }
+
+    // =====================================================
+    //  ABOUT PHOTO STACK SWITCH
+    // =====================================================
+    var aboutStackSwapped = false;
+    function switchAboutPhoto() {
+      var stack = document.getElementById('aboutPhotoStack');
+      if (!stack) return;
+      aboutStackSwapped = !aboutStackSwapped;
+      stack.classList.toggle('swapped', aboutStackSwapped);
     }
 
     // =====================================================
