@@ -791,6 +791,7 @@
         '<div class="msg-card-field"><span class="msg-card-field-label">联系方式</span><span class="msg-card-field-value">' + fd.contact + '</span></div>' +
         '<div class="msg-card-field"><span class="msg-card-field-label">姓名</span><span class="msg-card-field-value">' + fd.name + '</span></div>' +
         '<div class="msg-card-field"><span class="msg-card-field-label">创建时间</span><span class="msg-card-field-value">' + fd.created + '</span></div>';
+      document.getElementById('msgCardOverlay').style.display = '';
       document.getElementById('msgCardOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
       // Reset join button state
@@ -804,7 +805,9 @@
     }
 
     function resetExperience() {
-      document.getElementById('msgCardOverlay').classList.remove('active');
+      var card = document.getElementById('msgCardOverlay');
+      card.classList.remove('active');
+      card.style.display = 'none';
 
       // Reset flow nodes
       var nodes = document.querySelectorAll('.flow-node');
@@ -833,8 +836,11 @@
 
     var joinCount = 0;
     function joinOrder() {
-      // Hide message card first, then open personal info form
-      document.getElementById('msgCardOverlay').classList.remove('active');
+      // Force-hide message card immediately (no transition)
+      var card = document.getElementById('msgCardOverlay');
+      card.classList.remove('active');
+      card.style.display = 'none';
+      // Show personal info form
       document.getElementById('joinFormOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
@@ -885,7 +891,9 @@
     }
 
     function launchNew() {
-      document.getElementById('msgCardOverlay').classList.remove('active');
+      var card = document.getElementById('msgCardOverlay');
+      card.classList.remove('active');
+      card.style.display = 'none';
       // Reset flow nodes
       var nodes = document.querySelectorAll('.flow-node');
       nodes.forEach(function(n) { n.classList.remove('flow-active'); });
