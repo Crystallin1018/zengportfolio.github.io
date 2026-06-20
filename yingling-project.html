@@ -181,6 +181,53 @@
       text-transform: uppercase;
     }
 
+    /* ============ PRODUCTION PIPELINE ============ */
+    .pipeline-section { padding: 80px 40px 128px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
+    .pipeline-intro {
+      font-size: 14px; color: var(--text-medium); margin-bottom: 64px;
+      max-width: 520px; line-height: 1.8;
+    }
+    .pipeline-flow {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      position: relative;
+    }
+    /* Connecting line */
+    .pipeline-flow::before {
+      content: ''; position: absolute; top: 48px; left: 12.5%; right: 12.5%;
+      height: 1px; background: var(--border); z-index: 0;
+    }
+    .pipeline-step {
+      position: relative; z-index: 1; text-align: center;
+      padding: 0 12px;
+    }
+    .pipeline-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--accent); margin: 0 auto 32px;
+      position: relative; z-index: 2;
+      transition: transform 0.5s var(--ease-spring), box-shadow 0.5s var(--ease-lux);
+      box-shadow: 0 0 0 6px var(--bg-primary), 0 0 0 7px var(--border);
+    }
+    .pipeline-step:hover .pipeline-dot {
+      transform: scale(1.4);
+      box-shadow: 0 0 0 8px var(--bg-primary), 0 0 0 9px var(--accent);
+    }
+    .pipeline-icon {
+      font-size: 32px; margin-bottom: 18px; display: block;
+      transition: transform 0.5s var(--ease-spring);
+    }
+    .pipeline-step:hover .pipeline-icon { transform: scale(1.15) translateY(-4px); }
+    .pipeline-tool {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; color: var(--accent); margin-bottom: 8px;
+    }
+    .pipeline-task {
+      font-family: var(--font-serif); font-size: 14px; font-weight: 600;
+      color: var(--text-dark); margin-bottom: 6px; line-height: 1.4;
+    }
+    .pipeline-detail {
+      font-size: 11px; color: var(--text-light); line-height: 1.6;
+    }
+
     /* Double-Bezel film cards */
     .films-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
     .film-shell {
@@ -271,17 +318,21 @@
       .nav-glass { width: calc(100% - 32px); top: 14px; padding: 8px 18px; }
       .back-link { left: 18px; top: 78px; }
       .project-hero { padding: 150px 20px 56px; }
-      .films-section, .gallery-section { padding: 80px 20px; }
+      .films-section, .gallery-section, .pipeline-section { padding: 80px 20px; }
       .section-divider { width: calc(100% - 40px); }
       .films-grid { grid-template-columns: 1fr; gap: 20px; }
       .gallery-grid { columns: 2; column-gap: 12px; }
       .gallery-item { margin-bottom: 12px; }
+      .pipeline-flow { grid-template-columns: repeat(2, 1fr); gap: 36px 0; }
+      .pipeline-flow::before { display: none; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 22px; }
     }
     @media (max-width: 560px) {
       .project-hero-title { letter-spacing: -0.5px; }
       .project-hero-meta { gap: 16px; }
       .gallery-grid { columns: 1; }
+      .pipeline-flow { grid-template-columns: 1fr; gap: 28px 0; }
+      .pipeline-dot { display: none; }
     }
   </style>
 </head>
@@ -329,6 +380,44 @@
       并已产出两部 B 站原创短片及系列视觉资产，
       探索传统文化在数字时代的新叙事形式。
     </p>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ============ PRODUCTION PIPELINE ============ -->
+  <section class="pipeline-section" id="pipeline">
+    <p class="section-label">AIGC Production Pipeline</p>
+    <p class="pipeline-intro">从 IP 定位到成片输出，一条完整的多模态管线串联起 AI 工具链。</p>
+    <div class="pipeline-flow">
+      <div class="pipeline-step fade-up">
+        <div class="pipeline-dot"></div>
+        <span class="pipeline-icon">📝</span>
+        <p class="pipeline-tool">DeepSeek / ChatGPT</p>
+        <p class="pipeline-task">IP 定位 & 脚本</p>
+        <p class="pipeline-detail">世界观构建、角色设定与叙事脚本生成</p>
+      </div>
+      <div class="pipeline-step fade-up">
+        <div class="pipeline-dot"></div>
+        <span class="pipeline-icon">🎨</span>
+        <p class="pipeline-tool">ChatGPT</p>
+        <p class="pipeline-task">图像生成</p>
+        <p class="pipeline-detail">Prompt 驱动角色设计、场景与关键帧输出</p>
+      </div>
+      <div class="pipeline-step fade-up">
+        <div class="pipeline-dot"></div>
+        <span class="pipeline-icon">🎬</span>
+        <p class="pipeline-tool">豆包 · Seedance</p>
+        <p class="pipeline-task">视频生成</p>
+        <p class="pipeline-detail">图生视频、动作驱动与镜头序列合成</p>
+      </div>
+      <div class="pipeline-step fade-up">
+        <div class="pipeline-dot"></div>
+        <span class="pipeline-icon">✂️</span>
+        <p class="pipeline-tool">剪映</p>
+        <p class="pipeline-task">后期剪辑 & 配音</p>
+        <p class="pipeline-detail">节奏剪辑、调色、字幕包装与音频合成</p>
+      </div>
+    </div>
   </section>
 
   <hr class="section-divider">
