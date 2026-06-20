@@ -1964,7 +1964,7 @@
         el.className = 'skill-tag skill-tag--' + s.size + (s.glow ? ' skill-tag--glow' : '');
         el.setAttribute('data-index', idx);
         el.setAttribute('data-desc', s.desc);
-        el.innerHTML = '<span class="skill-tag-icon">' + s.icon + '</span><span class="skill-tag-text">' + s.text + '</span>';
+        el.innerHTML = '<span class="skill-tag-text">' + s.text + '</span>';
         el.addEventListener('click', function(e) { e.stopPropagation(); openSkillPopup(s.icon, s.text, s.desc); });
         nebula.appendChild(el);
         tagEls.push(el);
@@ -1987,23 +1987,66 @@
         };
       }
 
-      // --- Scatter tags randomly in container ---
+      // --- Rect overlap helper (with padding) ---
+      function tagsOverlap(ax, ay, aw, ah, bx, by, bw, bh) {
+        var pad = 10;
+        return !(ax + aw + pad < bx || bx + bw + pad < ax || ay + ah + pad < by || by + bh + pad < ay);
+      }
+      function getTagRect(tag) {
+        var r = tag.getBoundingClientRect();
+        return { x: parseFloat(tag.style.getPropertyValue('--tx') || gsap.getProperty(tag,'x')) || 0, y: parseFloat(tag.style.getPropertyValue('--ty') || gsap.getProperty(tag,'y')) || 0, w: r.width, h: r.height };
+      }
+
+      // --- Scatter tags randomly in container, strictly no overlap ---
       function scatterTags() {
         getBounds();
-        var used = [];
+        var placed = [];
         tagEls.forEach(function(tag) {
           var b = getTagBounds(tag);
-          var x, y, tries = 0;
+          var x, y, tries = 0, maxTries = 120;
           do {
             x = Math.random() * b.maxX;
             y = Math.random() * b.maxY;
             tries++;
-          } while (tries < 40 && used.some(function(u) {
-            return Math.abs(u.x - x) < 100 && Math.abs(u.y - y) < 60;
+          } while (tries < maxTries && placed.some(function(p) {
+            return tagsOverlap(x, y, b.w, b.h, p.x, p.y, p.w, p.h);
           }));
-          used.push({ x: x + b.w/2, y: y + b.h/2 });
+          placed.push({ x: x, y: y, w: b.w, h: b.h });
           gsap.set(tag, { x: x, y: y });
         });
+
+        // --- Separation loop: push apart any overlapping tags ---
+        var iterations = 20;
+        for (var iter = 0; iter < iterations; iter++) {
+          var moved = false;
+          for (var i = 0; i < tagEls.length; i++) {
+            for (var j = i + 1; j < tagEls.length; j++) {
+              var ri = getTagRect(tagEls[i]);
+              var rj = getTagRect(tagEls[j]);
+              if (tagsOverlap(ri.x, ri.y, ri.w, ri.h, rj.x, rj.y, rj.w, rj.h)) {
+                // Push apart from center
+                var cix = ri.x + ri.w / 2, ciy = ri.y + ri.h / 2;
+                var cjx = rj.x + rj.w / 2, cjy = rj.y + rj.h / 2;
+                var dx = cix - cjx, dy = ciy - cjy;
+                var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                var push = 1.5;
+                var mx = (dx / dist) * push, my = (dy / dist) * push;
+                // Move i
+                var bi = getTagBounds(tagEls[i]);
+                var nx_i = Math.max(bi.minX, Math.min(bi.maxX, ri.x + mx));
+                var ny_i = Math.max(bi.minY, Math.min(bi.maxY, ri.y + my));
+                gsap.set(tagEls[i], { x: nx_i, y: ny_i });
+                // Move j
+                var bj = getTagBounds(tagEls[j]);
+                var nx_j = Math.max(bj.minX, Math.min(bj.maxX, rj.x - mx));
+                var ny_j = Math.max(bj.minY, Math.min(bj.maxY, rj.y - my));
+                gsap.set(tagEls[j], { x: nx_j, y: ny_j });
+                moved = true;
+              }
+            }
+          }
+          if (!moved) break;
+        }
       }
 
       // --- GSAP floating orbits ---
@@ -2011,9 +2054,9 @@
       var orbitTweens = [];
       function startFloating() {
         tagEls.forEach(function(tag, i) {
-          var rx = 18 + Math.random() * 38;  // horizontal radius
-          var ry = 8 + Math.random() * 24;   // vertical radius
-          var dur = 4.5 + Math.random() * 6; // duration
+          var rx = 2 + Math.random() * 5;   // horizontal radius — subtle
+          var ry = 1 + Math.random() * 3;   // vertical radius — subtle
+          var dur = 7 + Math.random() * 8;  // duration — slower, relaxed
           var phase = Math.random() * Math.PI * 2; // random starting angle
 
           // Build a timeline that draws an ellipse using sin/cos at 60fps
@@ -2040,6 +2083,21 @@
               var ny = startY + dy;
               nx = Math.max(bx.minX, Math.min(bx.maxX, nx));
               ny = Math.max(bx.minY, Math.min(bx.maxY, ny));
+
+              // Collision avoidance: skip frame if would overlap another tag
+              var myR = tag.getBoundingClientRect();
+              var myW = myR.width, myH = myR.height;
+              var overlaps = false;
+              for (var k = 0; k < tagEls.length; k++) {
+                if (tagEls[k] === tag) continue;
+                var or = tagEls[k].getBoundingClientRect();
+                if (tagsOverlap(nx, ny, myW, myH, or.left - nebulaRect.left, or.top - nebulaRect.top, or.width, or.height)) {
+                  overlaps = true;
+                  break;
+                }
+              }
+              if (overlaps) return; // skip this frame — stay at previous position
+
               gsap.set(tag, { x: nx, y: ny });
               // Store current position for magnet
               tag._currentX = nx;
