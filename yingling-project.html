@@ -328,11 +328,12 @@
 
     /* Lightbox */
     .lightbox {
-      display: none; position: fixed; inset: 0; z-index: 10000;
-      background: rgba(0,0,0,0.94); align-items: center; justify-content: center; cursor: zoom-out;
+      display: flex; position: fixed; inset: 0; z-index: 10000;
+      background: rgba(0,0,0,0); align-items: center; justify-content: center; cursor: zoom-out;
+      pointer-events: none; opacity: 0;
     }
-    .lightbox.show { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; border-radius: 4px; }
+    .lightbox.show { pointer-events: auto; }
+    .lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; border-radius: 4px; will-change: transform, opacity; }
     .lightbox-close { position: absolute; top: 20px; right: 28px; font-size: 32px; color: white; cursor: pointer; transition: opacity 0.3s; z-index: 10001; font-weight: 300; line-height: 1; }
     .lightbox-close:hover { opacity: 0.5; }
     .lightbox-caption {
@@ -358,10 +359,6 @@
       will-change: transform, opacity, filter;
     }
     .fade-up.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
-
-    .bilibili-link { text-align: center; margin-top: 40px; font-size: 12.5px; color: var(--text-light); font-weight: 500; }
-    .bilibili-link a { border-bottom: 1px solid var(--text-faint); padding-bottom: 2px; transition: border-color 0.35s var(--ease-lux); }
-    .bilibili-link a:hover { border-color: var(--text-dark); opacity: 1; }
 
     /* ============ RESPONSIVE ============ */
     @media (max-width: 900px) {
@@ -488,11 +485,12 @@
       <div class="film-shell fade-up">
         <div class="film-core">
           <div class="video-wrapper">
-            <iframe src="https://player.bilibili.com/player.html?bvid=BV14Zjw6FEfb&page=1&autoplay=0"
-                    scrolling="no" frameborder="no" allowfullscreen="true" loading="lazy"></iframe>
+            <iframe src="https://player.bilibili.com/player.html?aid=116771117929525&bvid=BV14Zjw6FEfb&cid=39218578476&page=1&autoplay=0&high_quality=1&danmaku=0"
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                    allowfullscreen></iframe>
           </div>
           <div class="film-caption">
-            <h4>影灵灵 · 第一章</h4>
+            <h4>影灵灵登场</h4>
             <p>首部 AIGC 短片，讲述影灵灵的诞生故事，探索皮影美学与 AI 生成的融合。</p>
             <p class="film-meta">Bilibili · 2025</p>
           </div>
@@ -501,23 +499,19 @@
       <div class="film-shell fade-up">
         <div class="film-core">
           <div class="video-wrapper">
-            <iframe src="https://player.bilibili.com/player.html?bvid=BV1NwjA64EE3&page=1&autoplay=0"
-                    scrolling="no" frameborder="no" allowfullscreen="true" loading="lazy"></iframe>
+            <iframe src="https://player.bilibili.com/player.html?aid=116771134641336&bvid=BV1NwjA64EE3&cid=39218710482&page=1&autoplay=0&high_quality=1&danmaku=0"
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                    allowfullscreen></iframe>
           </div>
           <div class="film-caption">
-            <h4>影灵灵 · 第二章</h4>
+            <h4>影灵灵做皮影</h4>
             <p>延续视觉风格，通过更成熟的多模态管线，呈现更丰富的叙事场景与角色互动。</p>
             <p class="film-meta">Bilibili · 2025</p>
           </div>
         </div>
       </div>
     </div>
-    <p class="bilibili-link">
-      <a href="https://space.bilibili.com/2031015294" target="_blank">在 B 站观看更多影灵灵作品 →</a>
-    </p>
   </section>
-
-  <hr class="section-divider">
 
   <!-- ============ GALLERY ============ -->
   <section class="gallery-ring-section" id="gallery">
@@ -605,7 +599,7 @@
 
       // GSAP: set initial 3D positions
       var cards = ring.querySelectorAll('.ring-card');
-      gsap.set(ring, { rotationY: 180 });
+      gsap.set(ring, { rotationY: 180, xPercent: -50, yPercent: -50 });
       gsap.set(cards, {
         rotateY: function(i) { return i * -anglePer; },
         transformOrigin: '50% 50% 500px',
@@ -676,12 +670,21 @@
       lbCap.textContent = caption;
       lb.classList.add('show');
       document.body.style.overflow = 'hidden';
+      // Animate: background fade in, image scale up from 0.85
+      gsap.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+      gsap.fromTo(lb, { background: 'rgba(0,0,0,0)' }, { background: 'rgba(0,0,0,0.94)', duration: 0.35, ease: 'power2.out' });
+      gsap.fromTo(lbImg, { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)', delay: 0.05 });
     }
     function closeLightbox(e) {
       if (e) e.stopPropagation();
       var lb = document.getElementById('lightbox');
-      lb.classList.remove('show');
-      document.body.style.overflow = '';
+      var lbImg = document.getElementById('lightboxImg');
+      // Animate out
+      gsap.to(lbImg, { scale: 0.9, opacity: 0, duration: 0.2, ease: 'power2.in' });
+      gsap.to(lb, { opacity: 0, background: 'rgba(0,0,0,0)', duration: 0.25, ease: 'power2.in', onComplete: function() {
+        lb.classList.remove('show');
+        document.body.style.overflow = '';
+      }});
     }
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeLightbox();
