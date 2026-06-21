@@ -195,6 +195,7 @@
       z-index: 999;
       flex-direction: column;
       align-items: center; justify-content: flex-start;
+      padding-top: 100px;
       gap: 0;
       transition: opacity 0.6s var(--ease-lux);
     }
@@ -218,6 +219,7 @@
     .mobile-nav.show a:nth-child(1) { transition-delay: 100ms; }
     .mobile-nav.show a:nth-child(2) { transition-delay: 180ms; }
     .mobile-nav.show a:nth-child(3) { transition-delay: 260ms; }
+    .mobile-nav.show a:nth-child(4) { transition-delay: 340ms; }
 
     /* ============================================
        EYEBROW TAGS (pill badges before headings)
@@ -566,16 +568,24 @@
     }
     .about-card-col strong { color: var(--text-dark); font-weight: 600; }
 
+    /* About Me 描述段落黑点 */
+    .about-bullet { position: relative; padding-left: 16px; }
+    .about-bullet::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--text-dark);
+      font-weight: 700;
+      font-size: 14px;
+      line-height: inherit;
+    }
+
     /* ============================================
        SKILLS — Glassmorphism Floating Nebula
        ============================================ */
     .skills-section { margin-top: 40px; }
-    .skills-section h3 {
-      font-family: var(--font-serif);
-      font-size: 28px; font-weight: 600;
-      margin-bottom: 8px;
-      text-align: center;
-    }
+
     .skills-subtitle {
       text-align: center;
       font-size: 13px; color: var(--text-light);
@@ -589,7 +599,7 @@
       width: 100%;
       max-width: 900px;
       margin: 0 auto;
-      height: 520px;
+      height: 400px;
       overflow: visible;
       cursor: default;
     }
@@ -1116,21 +1126,6 @@
     }
 
     /* ============================================
-       FOOTER
-       ============================================ */
-    footer {
-      border-top: 1px solid var(--border-hairline);
-      padding: 32px 40px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--font-mono);
-      font-size: 11px; color: var(--text-light);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    footer a { color: var(--text-medium); }
-    footer a:hover { opacity: 0.6; }
-
-    /* ============================================
        SCROLL REVEAL — blur + translate + opacity
        ============================================ */
     .fade-up {
@@ -1176,10 +1171,10 @@
       .timeline::before { left: 16px; }
       .timeline-dot { width: 33px; min-width: 33px; font-size: 12px; }
 
-      .skill-nebula { height: 460px; max-width: 100%; }
+      .skill-nebula { height: 340px; max-width: 100%; }
 
       /* Hero: keep row on tablet, shrink photo */
-      .hero { padding: 90px 24px 40px 120px; gap: 20px; }
+      .hero { padding: 120px 24px 40px 120px; gap: 20px; }
       .hero-photo-stack { width: 260px; height: 65vh; max-height: 480px; }
       .hero-photo-card { width: 230px; height: 360px; }
       .hero-photo-card.bottom { transform: translate(-45%, -47%) rotate(2deg); }
@@ -1202,7 +1197,7 @@
         flex-direction: column !important;
         align-items: center;
         justify-content: flex-start;
-        padding: 80px 20px 40px;
+        padding: 110px 20px 40px;
         min-height: 100vh;
         gap: 0;
       }
@@ -1270,7 +1265,7 @@
       .about-photo-card.bottom { transform: translate(12px, -10px) rotate(3deg); }
       .about-intro-bio p { font-size: 13px; }
 
-      .skill-nebula { height: 420px; }
+      .skill-nebula { height: 300px; }
       .skill-tag--lg { padding: 8px 18px; }
       .skill-tag--lg .skill-tag-icon { font-size: 14px; }
       .skill-tag--lg .skill-tag-text { font-size: 12px; }
@@ -1416,7 +1411,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        padding: 90px 24px 40px;
+        padding: 120px 24px 40px;
         min-height: 100vh;
         gap: 0;
       }
@@ -1653,6 +1648,7 @@
       <a class="nav-link" data-target="hero">首页</a>
       <a class="nav-link" data-target="about">关于</a>
       <a class="nav-link" data-target="projects">项目</a>
+      <a class="nav-link" data-target="contact">联系</a>
     </div>
 
     <!-- Mobile hamburger — X morph -->
@@ -1666,6 +1662,7 @@
     <a data-target="hero" onclick="closeMobileNav()">首页</a>
     <a data-target="about" onclick="closeMobileNav()">关于</a>
     <a data-target="projects" onclick="closeMobileNav()">项目</a>
+    <a data-target="contact" onclick="closeMobileNav()">联系</a>
   </div>
 
 
@@ -1689,7 +1686,7 @@
     
 
     <!-- CTA buttons (mobile: below photo) -->
-    <div class="hero-cta-row">
+    <div class="hero-cta-row" id="contact">
       <a href="mailto:LinWan1020@163.com" class="hero-cta hero-cta--primary">
         发送邮件
         <span class="hero-cta-icon">↗</span>
@@ -1749,18 +1746,19 @@
           <h4>INTERNSHIP</h4>
           <p><strong>中国对外贸易广州物业发展有限公司</strong></p>
           <p>贸易促进部 · 文创门店实习生（2026.04 – 2026.05）</p>
-          <p>负责文创产品销量与库存数据统计，梳理热销及滞销单品特点，为选品与补货提供参考依据。</p>
-          <p>协助门店日常运营、货品统筹及客群接待，面向海内外参展客商进行产品讲解与推介。</p>
+          <p class="about-bullet">负责商品盘点、库存核查与补货上架，保障商品供应与陈列稳定，支撑门店高频日常运营，实现日均营业额 <strong>3 万元+</strong>。</p>
+          <p class="about-bullet">面向日均约 <strong>200+</strong> 人次的国内外顾客提供商品讲解与导购服务，通过快速识别用户需求进行差异化推荐，提升消费决策效率，实现<strong>单笔最高 3000 元</strong>交易转化。</p>
+          <p class="about-bullet">负责门店收银与每日账目清点，在日均 <strong>3 万元+</strong> 营业额、高频交易场景下完成收款与账务核对，保障资金与账目记录<strong>0 差错</strong>。</p>
         </div>
         <!-- 左下：项目经历 -->
         <div class="about-card-col">
           <h4>PROJECTS</h4>
           <p><strong>影灵灵 · AI 皮影文化 IP</strong></p>
-          <p>AIGC × 非遗皮影戏 · 2025 – 至今</p>
-          <p>设计角色一致性控制系统（Role Lock + Style Anchor），搭建多模态内容生产流程，产出角色设定手册、宣传海报及 B 站原创短片。</p>
+          <p class="about-bullet">设计"文案脚本→生图→生视频→后期合成"标准化工作流，调用豆包 Seedance 2.0 完成 <strong>2 条短视频</strong>，单张生图 <strong>5 分钟内</strong>，单条视频制作周期压缩至 <strong>2 小时内</strong>。</p>
+          <p class="about-bullet">基于 DeepSeek/ChatGPT 固定分镜脚本模板与锚点词库，解决角色一致性问题，实现 <strong>6 张图角色统一</strong> 标准化输出。</p>
           <p><strong>飞书自动化拼单通知系统</strong></p>
-          <p>项目负责人 · 2026.06</p>
-          <p>设计「飞书表单→多维表格→群机器人」自动化链路，需求发布后 3–5 秒自动触达用户，15 分钟可复用部署同类场景。</p>
+          <p class="about-bullet">设计「飞书表单→多维表格→群机器人」自动化链路，需求发布后 <strong>3–5 秒</strong> 自动触达用户，拼单效率提升 <strong>90%</strong>。</p>
+          <p class="about-bullet">搭建结构化消息卡片，构建"需求发布—用户响应—结果反馈"完整流程闭环，实现外卖拼单、拼车等 <strong>多场景快速复用</strong>，<strong>15 分钟</strong> 可部署同类流程。</p>
         </div>
         <!-- 右下：个人技能 -->
         <div class="about-card-col">
@@ -1777,15 +1775,13 @@
 
     <!-- Skills Nebula -->
     <div class="skills-section fade-up">
-      <h3>SKILLS</h3>
-      <p class="skills-subtitle">Hover to interact · Click to explore</p>
+      <h2 class="section-heading fade-up">SKILLS</h2>
       <div class="skill-nebula" id="skillNebula"></div>
     </div>
 
     <!-- Skill Popup Overlay -->
     <div class="skill-popup-overlay" id="skillPopupOverlay">
       <div class="skill-popup">
-        <span class="skill-popup-icon" id="skillPopupIcon">🎬</span>
         <div class="skill-popup-name" id="skillPopupName">AIGC 内容生产流水线</div>
         <p class="skill-popup-desc" id="skillPopupDesc">从0搭建"脚本→生图→生视频→后期合成"完整链路，将单视频制作压缩至2小时内，具备可复用生产管线设计能力。</p>
       </div>
@@ -1848,10 +1844,6 @@
   <hr class="section-divider">
 
 
-    ======= FOOTER ==================== -->
-  <footer>
-    <div>&copy; 2026 曾银晶 &middot; All rights reserved.</div>
-  </footer>
 
 
 
@@ -2113,8 +2105,8 @@
         el.setAttribute('data-index', idx);
         el.setAttribute('data-desc', s.desc);
         el.innerHTML = '<span class="skill-tag-text">' + s.text + '</span>';
-        el.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); openSkillPopup(s.icon, s.text, s.desc); });
-        el.addEventListener('pointerdown', function(e) { e.preventDefault(); e.stopPropagation(); openSkillPopup(s.icon, s.text, s.desc); });
+        el.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); openSkillPopup(s.text, s.desc); });
+        el.addEventListener('pointerdown', function(e) { e.preventDefault(); e.stopPropagation(); openSkillPopup(s.text, s.desc); });
         nebula.appendChild(el);
         tagEls.push(el);
       });
@@ -2385,8 +2377,7 @@
     })();
 
     // --- Skill Popup ---
-    function openSkillPopup(icon, name, desc) {
-      document.getElementById('skillPopupIcon').textContent = icon;
+    function openSkillPopup(name, desc) {
       document.getElementById('skillPopupName').textContent = name;
       document.getElementById('skillPopupDesc').textContent = desc;
       document.getElementById('skillPopupOverlay').classList.add('active');

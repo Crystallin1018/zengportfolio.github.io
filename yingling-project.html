@@ -420,6 +420,67 @@
       0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; }
     }
 
+    /* CSS 3D Cylindrical Gallery */
+    .gallery-ogl-section {
+      padding: 80px 40px 100px;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+    .gallery-ogl-container {
+      width: 100%;
+      height: 500px;
+      position: relative;
+      cursor: grab;
+      outline: none;
+      perspective: 1200px;
+      overflow: hidden;
+    }
+    .gallery-ogl-container:active { cursor: grabbing; }
+    .cyl-scene {
+      width: 200px;
+      height: 260px;
+      position: absolute;
+      left: 50%; top: 50%;
+      transform-style: preserve-3d;
+      transform: translateX(-50%) translateY(-50%) rotateY(0deg);
+    }
+    .cyl-item {
+      position: absolute;
+      width: 200px;
+      height: 260px;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+    }
+    .cyl-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+      cursor: pointer;
+      transition: box-shadow 0.3s;
+    }
+    .cyl-item img:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+    }
+    .cyl-caption {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 8px;
+      font-family: var(--font-sans);
+    }
+    .gallery-hint {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 16px;
+      letter-spacing: 1px;
+      animation: hintPulse 3s ease-in-out infinite;
+    }
+
     /* Lightbox */
     .lightbox {
       display: flex; position: fixed; inset: 0; z-index: 10000;
@@ -467,6 +528,8 @@
       .films-grid { grid-template-columns: 1fr; gap: 20px; }
       .gallery-ring-container { height: 420px; }
       .gallery-ring { width: 220px; height: 308px; }
+      .gallery-ogl-container { height: 400px; }
+      .gallery-ogl-section { padding: 80px 20px 80px; }
       .pipeline-canvas-wrapper { height: auto; min-height: 500px; padding: 40px 0; }
       .pipeline-ui { position: relative; height: auto; }
       .pipeline-nodes { gap: 16px; flex-wrap: wrap; }
@@ -479,6 +542,8 @@
       .project-hero-meta { gap: 16px; }
       .gallery-ring-container { height: 340px; }
       .gallery-ring { width: 180px; height: 252px; }
+      .gallery-ogl-container { height: 320px; }
+      .gallery-ogl-section { padding: 60px 16px 80px; }
       .pipeline-canvas-wrapper { height: auto; min-height: 600px; padding: 40px 0; }
       .pipeline-ui { align-items: flex-start; padding-top: 0; }
       .pipeline-nodes { flex-direction: column; gap: 20px; }
@@ -639,13 +704,11 @@
     </div>
   </section>
 
-  <!-- ============ GALLERY ============ -->
-  <section class="gallery-ring-section" id="gallery">
+  <!-- ============ GALLERY (CSS 3D Cylinder) ============ -->
+  <section class="gallery-ogl-section" id="gallery">
     <p class="section-label">Photo Gallery</p>
-    <div class="gallery-ring-container">
-      <div class="gallery-stage">
-        <div class="gallery-ring" id="galleryRing"></div>
-      </div>
+    <div class="gallery-ogl-container" id="galleryOglContainer" tabindex="0" role="region" aria-label="Photo gallery. Drag to rotate.">
+      <div class="cyl-scene" id="cylScene"></div>
     </div>
     <p class="gallery-hint">← 拖拽旋转浏览 →</p>
   </section>
@@ -667,216 +730,111 @@
   </div>
 
   <script>
-    // === PHOTO GALLERY DATA ===
+    // === PHOTO GALLERY DATA (OGL Cylindrical) ===
     var yinglingPics = [
       { file: 'yinglingling_views.png',      caption: '影灵灵 · 三视图' },
       { file: 'yinglingling_birth.png',       caption: '影灵灵 · 诞生' },
       { file: 'yinglingling_projection.png',  caption: '影灵灵 · 投影展示' },
       { file: 'yinglingling_small.png',        caption: '影灵灵 · 小皮影' },
-      { file: '三视图.png',                    caption: '影灵灵 · 三视图（中文版）' },
-      { file: '做皮影.png',                    caption: '皮影制作过程' },
-      { file: '影灵灵诞生.png',                caption: '影灵灵诞生过程' },
-      { file: '投影.png',                      caption: '投影效果展示' },
-      { file: '生成小皮影.png',                caption: 'AI 生成小皮影' },
+      { file: 'images/yingling/三视图.png',                    caption: '影灵灵 · 三视图（中文版）' },
+      { file: 'images/yingling/做皮影.png',                    caption: '皮影制作过程' },
+      { file: 'images/yingling/影灵灵诞生.png',                caption: '影灵灵诞生过程' },
+      { file: 'images/yingling/投影.png',                      caption: '投影效果展示' },
+      { file: 'images/yingling/生成小皮影.png',                caption: 'AI 生成小皮影' },
       { file: 'making_piying.png',             caption: '幕后花絮 - 制作过程' }
     ];
 
-    function buildGallery() {
-      var ring = document.getElementById('galleryRing');
-      if (!ring) return;
-      var total = yinglingPics.length;
-      var anglePer = 360 / total;
+    // ========== OGL Cylindrical Gallery ==========
 
-      yinglingPics.forEach(function(pic, i) {
-        var card = document.createElement('div');
-        card.className = 'ring-card';
-        card.setAttribute('data-index', i);
-
-        var img = document.createElement('img');
-        img.src = 'images/yinglingling/' + pic.file;
-        img.alt = pic.caption;
-        img.loading = 'lazy';
-        (function(cardEl, picFile, picCaption) {
-          img.onerror = function() {
-            this.style.display = 'none';
-            var ph = document.createElement('div');
-            ph.className = 'ring-card-placeholder';
-            ph.textContent = '🎭';
-            cardEl.insertBefore(ph, cardEl.querySelector('.ring-card-label'));
-          };
-        })(card, pic.file, pic.caption);
-        card.appendChild(img);
-
-        var label = document.createElement('div');
-        label.className = 'ring-card-label';
-        label.textContent = pic.caption;
-        card.appendChild(label);
-
-        // Click to lightbox
-        (function(f, c) {
-          card.addEventListener('click', function(e) {
-            e.stopPropagation();
-            openLightbox(f, c);
-          });
-        })(pic.file, pic.caption);
-
-        ring.appendChild(card);
-      });
-
-      // GSAP: set initial 3D positions
-      var cards = ring.querySelectorAll('.ring-card');
-      gsap.set(ring, { rotationY: 180, xPercent: -50, yPercent: -50 });
-      gsap.set(cards, {
-        rotateY: function(i) { return i * -anglePer; },
-        transformOrigin: '50% 50% 500px',
-        z: -500
-      });
-      gsap.from(cards, {
-        duration: 1.5, y: 120, opacity: 0, stagger: 0.08, ease: 'power2.out', delay: 0.3
-      });
-
-      // Hover: dim non-hovered cards (PC only)
-      if (window.innerWidth >= 768) {
-        ring.addEventListener('mouseenter', function(e) {
-          if (e.target.classList.contains('ring-card')) {
-            gsap.to(cards, { opacity: function(i, el) { return el === e.target ? 1 : 0.4; }, duration: 0.4, ease: 'power2' });
-          }
-        }, true);
-        ring.addEventListener('mouseleave', function(e) {
-          gsap.to(cards, { opacity: 1, duration: 0.4, ease: 'power2.inOut' });
-        }, true);
-      }
-
-      // === DRAG TO ROTATE (fixed) ===
-      var isDragging = false, lastX = 0, momentum = 0;
-      var dragThreshold = 4;
-      var hasDragged = false;
-
-      function onStart(e) {
-        // Don't start drag on PC if clicking a card (let card click trigger lightbox)
-        if (e.type === 'mousedown') {
-          var target = e.target;
-          while (target && target !== ring) {
-            if (target.classList && target.classList.contains('ring-card')) return;
-            target = target.parentNode;
-          }
-        }
-        isDragging = true;
-        hasDragged = false;
-        ring.classList.add('dragging');
-        lastX = e.touches ? e.touches[0].clientX : e.clientX;
-        momentum = 0;
-      }
-
-      function onMove(e) {
-        if (!isDragging) return;
-        var x = e.touches ? e.touches[0].clientX : e.clientX;
-        var delta = x - lastX;
-        if (Math.abs(delta) > dragThreshold) hasDragged = true;
-        if (!hasDragged) return;
-        if (e.cancelable !== false) e.preventDefault();
-        momentum = delta * 0.6;
-        var currentRot = gsap.getProperty(ring, 'rotationY');
-        gsap.set(ring, { rotationY: currentRot - delta * 0.4 });
-        lastX = x;
-      }
-
-      function onEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        ring.classList.remove('dragging');
-        if (hasDragged) {
-          var currentRot = gsap.getProperty(ring, 'rotationY');
-          gsap.to(ring, {
-            rotationY: currentRot - momentum * 15,
-            duration: 1.8,
-            ease: 'power3.out'
-          });
-        }
-      }
-
-      ring.addEventListener('mousedown', onStart);
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseup', onEnd);
-      ring.addEventListener('touchstart', onStart, { passive: false });
-      window.addEventListener('touchmove', onMove, { passive: false });
-      window.addEventListener('touchend', onEnd);
-      ring.addEventListener('dragstart', function(e) { e.preventDefault(); });
-    }
-
-    function openLightbox(filename, caption) {
-      var lb = document.getElementById('lightbox');
-      var lbImg = document.getElementById('lightboxImg');
-      var lbCap = document.getElementById('lightboxCaption');
-      lbImg.src = 'images/yinglingling/' + filename;
-      lbCap.textContent = caption;
-      lb.classList.add('show');
-      document.body.style.overflow = 'hidden';
-      // Animate: background fade in, image scale up from 0.85
-      gsap.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
-      gsap.fromTo(lb, { background: 'rgba(0,0,0,0)' }, { background: 'rgba(0,0,0,0.94)', duration: 0.35, ease: 'power2.out' });
-      gsap.fromTo(lbImg, { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)', delay: 0.05 });
-    }
-    function closeLightbox(e) {
-      if (e) e.stopPropagation();
-      var lb = document.getElementById('lightbox');
-      var lbImg = document.getElementById('lightboxImg');
-      // Animate out
-      gsap.to(lbImg, { scale: 0.9, opacity: 0, duration: 0.2, ease: 'power2.in' });
-      gsap.to(lb, { opacity: 0, background: 'rgba(0,0,0,0)', duration: 0.25, ease: 'power2.in', onComplete: function() {
-        lb.classList.remove('show');
-        document.body.style.overflow = '';
-      }});
-    }
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeLightbox();
-    });
-
-    // === SCROLL PROGRESS ===
+    // ========= CSS 3D Cylindrical Gallery =========
     (function() {
-      var bar = document.getElementById('scrollProgress');
-      window.addEventListener('scroll', function() {
-        var h = document.documentElement;
-        var scrolled = h.scrollTop || document.body.scrollTop;
-        var max = (h.scrollHeight - h.clientHeight) || 1;
-        bar.style.transform = 'scaleX(' + Math.min(scrolled / max, 1) + ')';
-      }, { passive: true });
+      var container = document.getElementById('galleryOglContainer');
+      if (!container) return;
+      
+      var scene = document.getElementById('cylScene');
+      if (!scene) {
+        scene = document.createElement('div');
+        scene.className = 'cyl-scene';
+        scene.id = 'cylScene';
+        container.appendChild(scene);
+      }
+      
+      // 生成圆柱体图片
+      var total = yinglingPics.length;
+      var angleStep = 360 / total;
+      var radius = 320; // 圆柱体半径（px）
+      
+      yinglingPics.forEach(function(pic, i) {
+        var item = document.createElement('div');
+        item.className = 'cyl-item';
+        item.style.transform = 'rotateY(' + (angleStep * i) + 'deg) translateZ(' + radius + 'px)';
+        item.setAttribute('data-index', i);
+        
+        var img = document.createElement('img');
+        img.src = pic.file;
+        img.alt = pic.caption || '';
+        img.loading = 'lazy';
+        img.onclick = function() { openLightbox(pic.file, pic.caption); };
+        
+        var caption = document.createElement('p');
+        caption.className = 'cyl-caption';
+        caption.textContent = pic.caption || '';
+        
+        item.appendChild(img);
+        item.appendChild(caption);
+        scene.appendChild(item);
+      });
+      
+      // 拖拽旋转
+      var isDown = false;
+      var startX = 0;
+      var currentRotate = 0;
+      var targetRotate = 0;
+      var lastRotate = 0;
+      var scrollSpeed = 0.5;
+      
+      function updateRotation() {
+        currentRotate += (targetRotate - currentRotate) * 0.08;
+        scene.style.transform = 'rotateY(' + currentRotate + 'deg)';
+        requestAnimationFrame(updateRotation);
+      }
+      updateRotation();
+      
+      function onDown(e) {
+        isDown = true;
+        startX = e.touches ? e.touches[0].clientX : e.clientX;
+        lastRotate = currentRotate;
+      }
+      
+      function onMove(e) {
+        if (!isDown) return;
+        var x = e.touches ? e.touches[0].clientX : e.clientX;
+        var diff = (x - startX) * 0.3;
+        targetRotate = lastRotate + diff;
+      }
+      
+      function onUp() { isDown = false; }
+      
+      function onWheel(e) {
+        var delta = e.deltaY || e.wheelDelta || e.detail;
+        targetRotate += (delta > 0 ? 1 : -1) * scrollSpeed * 20;
+      }
+      
+      container.addEventListener('mousedown', onDown);
+      container.addEventListener('mousemove', onMove);
+      container.addEventListener('mouseup', onUp);
+      container.addEventListener('mouseleave', onUp);
+      container.addEventListener('touchstart', onDown, { passive: true });
+      container.addEventListener('touchmove', onMove, { passive: true });
+      container.addEventListener('touchend', onUp);
+      container.addEventListener('wheel', onWheel, { passive: true });
+      
+      // 键盘导航
+      container.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); targetRotate -= 40; }
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); targetRotate += 40; }
+      });
     })();
-
-    // === NAV SCROLLED STATE ===
-    window.addEventListener('scroll', function() {
-      var nb = document.getElementById('navbar');
-      if (!nb) return;
-      if (window.scrollY > 40) nb.classList.add('scrolled');
-      else nb.classList.remove('scrolled');
-    }, { passive: true });
-
-    // === MOBILE NAV (X morph + fullscreen glass) ===
-    function toggleMobileNav() {
-      document.getElementById('menuToggle').classList.toggle('active');
-      document.getElementById('mobileOverlay').classList.toggle('show');
-    }
-    function closeMobileNav() {
-      document.getElementById('menuToggle').classList.remove('active');
-      document.getElementById('mobileOverlay').classList.remove('show');
-    }
-
-    // === INTERSECTION OBSERVER REVEALS ===
-    function initScrollAnimations() {
-      var els = document.querySelectorAll('.fade-up');
-      if (!('IntersectionObserver' in window)) { els.forEach(function(el) { el.classList.add('visible'); }); return; }
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) { entry.target.classList.add('visible'); }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-      els.forEach(function(el) { obs.observe(el); });
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      buildGallery();
-      initScrollAnimations();
-    });
   </script>
 
   <!-- Three.js CDN -->
