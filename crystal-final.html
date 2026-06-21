@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>曾银晶 — AIGC Creator & Cultural IP Designer</title>
+  <meta name="description" content="曾银晶个人作品集 · AIGC创作者 · 文化IP设计师 · 广东外语外贸大学">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600;1,9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET ========== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ========== ROOT VARIABLES (Light Theme from screenshot) ========== */
+    :root {
+      --bg: #F4F1EA;
+      --bg-secondary: #EBE7DD;
+      --text: #1F1F1F;
+      --text-secondary: #4A4A4A;
+      --text-dim: #8B8B8B;
+      --text-faint: #B5B0A6;
+      --border: rgba(31, 31, 31, 0.08);
+      --border-hover: rgba(31, 31, 31, 0.2);
+      --accent: #1F1F1F;
+      --serif: 'Fraunces', 'Times New Roman', serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ========== BASE ========== */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Subtle noise texture */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: var(--text); color: var(--bg); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--text-faint); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+    /* ========== MOUSE COORDINATE TRACKER ========== */
+    .coord-tracker {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      z-index: 100;
+      pointer-events: none;
+      letter-spacing: 0.3px;
+    }
+    @media (max-width: 768px) { .coord-tracker { display: none; } }
+
+    /* ========== LAYOUT ========== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    @media (max-width: 768px) { .container { padding: 0 24px; } }
+
+    /* ========== TOP NAVIGATION ========== */
+    .nav-top {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 18px 0;
+      background: rgba(244, 241, 234, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .nav-top__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (max-width: 768px) { .nav-top__inner { padding: 0 24px; } }
+
+    .nav-top__brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-top__name {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .nav-top__role {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-top__list {
+      display: flex;
+      list-style: none;
+      gap: 0;
+      align-items: center;
+    }
+    .nav-top__link {
+      padding: 6px 16px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: color 200ms ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .nav-top__link:hover { color: var(--text); }
+    .nav-top__link.active { color: var(--text); }
+    .nav-top__link.active::before {
+      content: "";
+      position: absolute;
+      left: 16px; top: 50%;
+      width: 4px; height: 4px;
+      background: var(--text);
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+
+    .nav-top__icon {
+      width: 18px;
+      height: 18px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: color 200ms ease;
+    }
+    .nav-top__icon:hover { color: var(--text); }
+
+    .nav-top__toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .nav-top__toggle span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: var(--text);
+      margin: 4px 0;
+      transition: all 300ms ease;
+    }
+
+    @media (max-width: 768px) {
+      .nav-top__list {
+        position: fixed;
+        top: 56px; left: 0; right: 0;
+        background: rgba(244, 241, 234, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 16px 0;
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: all 300ms ease;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-top__list.open { transform: translateY(0); opacity: 1; }
+      .nav-top__link { padding: 14px 32px; font-size: 15px; }
+      .nav-top__toggle { display: block; }
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+      gap: 60px;
+      padding: 110px 0 60px;
+      position: relative;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 40px; padding: 100px 0 40px; }
+    }
+
+    .hero__content { position: relative; z-index: 2; }
+
+    .hero__title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .hero__title .no-italic {
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .hero__greeting {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero__location {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero__location::after {
+      content: ":";
+      margin-left: 2px;
+    }
+
+    .hero__skills {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .hero__skills li {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero__skills li::before {
+      content: "•";
+      color: var(--text-dim);
+      font-size: 10px;
+    }
+
+    .hero__cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: all 250ms ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn--primary {
+      background: var(--text);
+      color: var(--bg);
+    }
+    .btn--primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(31, 31, 31, 0.2);
+    }
+    .btn--ghost {
+      background: transparent;
+      color: var(--text);
+    }
+    .btn--ghost:hover { opacity: 0.7; }
+    .btn svg { width: 14px; height: 14px; }
+
+    .hero__visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 480px;
+    }
+    @media (max-width: 900px) { .hero__visual { min-height: 320px; } }
+
+    /* SVG portrait illustration (placeholder) */
+    .hero__portrait {
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 1/1.2;
+      position: relative;
+    }
+    .hero__portrait svg { width: 100%; height: 100%; }
+
+    /* Hero scroll indicator */
+    .hero__scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero__scroll-line {
+      width: 1px;
+      height: 24px;
+      background: var(--text-dim);
+      animation: scrollPulse 2s ease-in-out infinite;
+      transform-origin: top;
+    }
+    @keyframes scrollPulse {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* ========== SECTION COMMON ========== */
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+    @media (max-width: 768px) { .section { padding: 64px 0; } }
+
+    .section__header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 56px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section__num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .section__title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .section__meta {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ========== WORKS ========== */
+    .works__list { display: flex; flex-direction: column; }
+
+    .work-item {
+      display: grid;
+      grid-template-columns: 100px 1fr 32px;
+      gap: 32px;
+      align-items: start;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: all 350ms ease;
+      position: relative;
+      cursor: pointer;
+    }
+    .work-item:first-child { border-top: 1px solid var(--border); }
+    .work-item::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 1px;
+      background: var(--text);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 400ms ease;
+    }
+    .work-item:hover::before { transform: scaleX(1); }
+    .work-item:hover .work-item__title { color: var(--text); }
+    .work-item:hover .work-item__arrow { transform: translate(4px, -4px); opacity: 1; }
+
+    .work-item__year {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      padding-top: 4px;
+    }
+
+    .work-item__body { max-width: 620px; }
+    .work-item__title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.15rem, 2.3vw, 1.6rem);
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+      transition: color 300ms ease;
+    }
+    .work-item__desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .work-item__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .work-item__tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      padding: 3px 10px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      letter-spacing: 0.3px;
+    }
+
+    .work-item__arrow {
+      font-size: 20px;
+      color: var(--text);
+      opacity: 0.3;
+      transition: all 300ms ease;
+      align-self: center;
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      .work-item { grid-template-columns: 1fr; gap: 8px; }
+      .work-item__arrow { display: none; }
+    }
+
+    /* ========== ABOUT ========== */
+    .about__slogan {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 48px;
+      max-width: 700px;
+      color: var(--text);
+    }
+
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .about__grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    .about__text p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+    .about__text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .about__info {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .info-block__label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .info-block__value {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ========== SKILLS (ACCORDION) ========== */
+    .skills__note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+    }
+
+    .skill-accordion {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--border);
+    }
+
+    .skill-item { border-bottom: 1px solid var(--border); }
+    .skill-item:hover { background: rgba(31, 31, 31, 0.015); }
+
+    .skill-item__header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .skill-item__num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      min-width: 28px;
+    }
+
+    .skill-item__name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+      flex: 1;
+      transition: color 200ms ease;
+    }
+
+    .skill-item__grade {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .skill-item__arrow {
+      font-size: 12px;
+      color: var(--text-dim);
+      transition: transform 300ms ease;
+    }
+    .skill-item.open .skill-item__arrow { transform: rotate(180deg); }
+
+    .skill-item__body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 400ms ease;
+    }
+    .skill-item.open .skill-item__body { max-height: 500px; }
+
+    .skill-item__content { padding: 0 0 24px 44px; }
+    .skill-item__desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .skill-item__keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .skill-item__keyword {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+    }
+
+    /* ========== RESUME ========== */
+    .resume__section { margin-bottom: 56px; }
+    .resume__section-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .resume__entry {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 24px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .resume__entry:last-child { border-bottom: none; }
+
+    .resume__date {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      padding-top: 2px;
+    }
+
+    .resume__detail h4 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .resume__detail .resume__org {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .resume__detail p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 640px) {
+      .resume__entry { grid-template-columns: 1fr; gap: 4px; }
+    }
+
+    /* ========== AWARDS ========== */
+    .awards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .award-card {
+      border: 1px solid var(--border);
+      padding: 24px;
+      transition: all 250ms ease;
+      background: rgba(255,255,255,0.3);
+    }
+    .award-card:hover {
+      border-color: var(--border-hover);
+      background: rgba(255,255,255,0.5);
+    }
+    .award-card__title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .award-card__source {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* ========== CONTACT ========== */
+    .contact__inner { text-align: center; padding: 60px 0; }
+
+    .contact__title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+
+    .contact__desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 440px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .contact__form {
+      max-width: 480px;
+      margin: 0 auto 48px;
+      text-align: left;
+    }
+
+    .contact__options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .contact__option {
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      background: transparent;
+    }
+    .contact__option:hover { color: var(--text); border-color: var(--border-hover); }
+    .contact__option.selected {
+      color: var(--bg);
+      background: var(--text);
+      border-color: var(--text);
+    }
+
+    .contact__field { position: relative; margin-bottom: 24px; }
+    .contact__label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .contact__input,
+    .contact__textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      padding: 8px 0;
+      outline: none;
+      transition: border-color 250ms ease;
+    }
+    .contact__input:focus,
+    .contact__textarea:focus { border-color: var(--text); }
+    .contact__textarea {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.6;
+    }
+
+    .contact__submit {
+      display: block;
+      margin: 0 auto;
+      padding: 12px 32px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--bg);
+      background: var(--text);
+      border: none;
+      cursor: pointer;
+      transition: all 250ms ease;
+    }
+    .contact__submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(31, 31, 31, 0.2);
+    }
+
+    .contact__socials {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .contact__social {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color 200ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .contact__social:hover { color: var(--text); }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0 32px;
+      margin-top: 60px;
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 768px) {
+      .footer__grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+    @media (max-width: 480px) {
+      .footer__grid { grid-template-columns: 1fr; }
+    }
+
+    .footer__brand-name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .footer__brand-role {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .footer__brand-tagline {
+      font-size: 13px;
+      color: var(--text-secondary);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    .footer__col-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+    .footer__col-list { list-style: none; }
+    .footer__col-list li { margin-bottom: 8px; }
+    .footer__col-list a {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: color 200ms ease;
+    }
+    .footer__col-list a:hover { color: var(--text); }
+
+    .footer__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .footer__bottom a {
+      color: var(--text);
+      transition: opacity 200ms ease;
+    }
+    .footer__bottom a:hover { opacity: 0.7; }
+    @media (max-width: 640px) {
+      .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
+    }
+
+    /* ========== REVEAL ========== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+
+    /* ========== TOAST ========== */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.35s var(--ease);
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .honeypot {
+      position: absolute;
+      left: -9999px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ========== SCROLL PROGRESS BAR ========== */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--text);
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 2000;
+      transition: transform 100ms linear;
+    }
+
+    /* ========== DARK THEME VARIABLES ========== */
+    :root.dark {
+      --bg: #0A0A0A;
+      --bg-secondary: #141414;
+      --text: #F4F1EA;
+      --text-secondary: #B5B0A6;
+      --text-dim: #6B6862;
+      --text-faint: #3A3833;
+      --border: rgba(244, 241, 234, 0.10);
+      --border-hover: rgba(244, 241, 234, 0.25);
+      --accent: #F4F1EA;
+    }
+    :root.dark .skill-item:hover { background: rgba(244, 241, 234, 0.025); }
+    :root.dark body::after { opacity: 0.5; }
+  </style>
+</head>
+<body>
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <!-- ========== MOUSE COORDINATE TRACKER ========== -->
+  <div class="coord-tracker" id="coordTracker">{ x: 0, y: 0 }</div>
+
+  <!-- ========== TOP NAVIGATION ========== -->
+  <nav class="nav-top">
+    <div class="nav-top__inner">
+      <a href="#home" class="nav-top__brand">
+        <span class="nav-top__name">曾银晶 Crystal Zeng</span>
+        <span class="nav-top__role">AIGC Creator & Cultural IP Designer</span>
+      </a>
+      <button class="nav-top__toggle" id="navToggle" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-top__list" id="navList">
+        <li><a href="#home" class="nav-top__link">Home</a></li>
+        <li><a href="#works" class="nav-top__link">Works</a></li>
+        <li><a href="#about" class="nav-top__link">About</a></li>
+        <li><a href="#skills" class="nav-top__link">Skills</a></li>
+        <li><a href="#resume" class="nav-top__link">Resume</a></li>
+        <li><a href="#contact" class="nav-top__link">Contact</a></li>
+      </ul>
+      <svg class="nav-top__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" onclick="toggleTheme()">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </div>
+  </nav>
+
+  <!-- ========== HERO (01 Home) ========== -->
+  <section class="hero container" id="home">
+    <div class="hero__content">
+      <p class="hero__greeting">Hi, I'm Crystal.</p>
+      <h1 class="hero__title">
+        AIGC Creator<br>
+        <span class="no-italic">&amp;</span> Cultural IP<br>
+        <span class="no-italic">Designer.</span>
+      </h1>
+      <p class="hero__location">A Guangzhou-based specialist skilled in</p>
+      <ul class="hero__skills">
+        <li>0 → 1 AIGC content production</li>
+        <li>Cultural IP design &amp; brand systems</li>
+        <li>Digital marketing &amp; automation</li>
+        <li>Prompt engineering &amp; multimodal pipelines</li>
+        <li>Creative storytelling &amp; video production</li>
+      </ul>
+      <div class="hero__cta">
+        <a href="yingling-project.html" class="btn btn--primary">
+          Resume
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </a>
+        <a href="#contact" class="btn btn--ghost">
+          Say hi!
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__visual">
+      <div class="hero__portrait">
+        <svg viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#4A4A4A" stroke-width="0.8" opacity="0.6">
+          <!-- Topographic portrait lines -->
+          <g stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 100 60 Q 200 40 300 60 Q 320 100 310 140 Q 280 160 200 150 Q 120 160 90 140 Q 80 100 100 60"/>
+            <path d="M 80 90 Q 200 70 320 90 Q 340 130 320 170 Q 270 190 200 180 Q 130 190 80 170 Q 60 130 80 90"/>
+            <path d="M 70 130 Q 200 110 330 130 Q 350 170 330 210 Q 270 230 200 220 Q 130 230 70 210 Q 50 170 70 130"/>
+            <path d="M 60 170 Q 200 150 340 170 Q 360 210 340 250 Q 270 270 200 260 Q 130 270 60 250 Q 40 210 60 170"/>
+            <path d="M 60 210 Q 200 190 340 210 Q 360 250 340 290 Q 270 310 200 300 Q 130 310 60 290 Q 40 250 60 210"/>
+            <path d="M 70 250 Q 200 230 330 250 Q 350 290 330 330 Q 270 350 200 340 Q 130 350 70 330 Q 50 290 70 250"/>
+            <path d="M 80 290 Q 200 270 320 290 Q 340 330 320 370 Q 270 390 200 380 Q 130 390 80 370 Q 60 330 80 290"/>
+            <path d="M 100 330 Q 200 310 300 330 Q 320 370 300 410 Q 250 430 200 420 Q 150 430 100 410 Q 80 370 100 330"/>
+            <path d="M 120 370 Q 200 350 280 370 Q 300 410 280 440 Q 240 460 200 450 Q 160 460 120 440 Q 100 410 120 370"/>
+            <path d="M 150 410 Q 200 395 250 410 Q 260 430 240 450 Q 220 460 200 455 Q 180 460 160 450 Q 140 430 150 410"/>
+
+            <!-- Face details (subtle) -->
+            <ellipse cx="160" cy="200" rx="6" ry="8" fill="none" stroke-width="0.6"/>
+            <ellipse cx="240" cy="200" rx="6" ry="8" fill="none" stroke-width="0.6"/>
+            <path d="M 180 250 Q 200 260 220 250" stroke-width="0.6"/>
+            <path d="M 170 220 Q 175 225 180 220 M 220 220 Q 225 225 230 220" stroke-width="0.4"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero__scroll">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ========== WORKS (02) ========== -->
+  <section class="section container" id="works">
+    <div class="section__header reveal">
+      <span class="section__num">02</span>
+      <h2 class="section__title">Selected Works</h2>
+      <span class="section__meta">02 projects</span>
+    </div>
+
+    <div class="works__list">
+      <a href="yingling-project.html" class="work-item reveal">
+        <div class="work-item__year">2025 — 2026</div>
+        <div class="work-item__body">
+          <h3 class="work-item__title">
+            影灵灵: Designing an AI-Powered Shadow Puppet Cultural IP from Zero to One
+          </h3>
+          <p class="work-item__desc">
+            A full-pipeline AIGC project covering character design, world-building, original
+            Bilibili short films, and digital merchandise — reviving the 2000-year-old art of
+            Chinese shadow puppetry through AI-driven content creation.
+          </p>
+          <div class="work-item__tags">
+            <span class="work-item__tag">AIGC</span>
+            <span class="work-item__tag">Cultural IP</span>
+            <span class="work-item__tag">Prompt Engineering</span>
+            <span class="work-item__tag">Video Production</span>
+          </div>
+        </div>
+        <div class="work-item__arrow">↗</div>
+      </a>
+
+      <a href="feishu-project.html" class="work-item reveal reveal-d1">
+        <div class="work-item__year">2026</div>
+        <div class="work-item__body">
+          <h3 class="work-item__title">
+            Feishu Automation: Building a Zero-Code System that Cut Response Time by 90%
+          </h3>
+          <p class="work-item__desc">
+            A course project leading a team to design and deploy a Feishu (Lark) automation
+            workflow that compressed group-buy response time from 30 minutes to 5 seconds,
+            with success rate jumping from 40% to 75%.
+          </p>
+          <div class="work-item__tags">
+            <span class="work-item__tag">Automation</span>
+            <span class="work-item__tag">Zero-Code</span>
+            <span class="work-item__tag">Project Lead</span>
+            <span class="work-item__tag">Digital Marketing</span>
+          </div>
+        </div>
+        <div class="work-item__arrow">↗</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT (03) ========== -->
+  <section class="section container" id="about">
+    <div class="section__header reveal">
+      <span class="section__num">03</span>
+      <h2 class="section__title">About</h2>
+    </div>
+
+    <h3 class="about__slogan reveal">
+      From idea to end product,<br>&amp; everything in between.
+    </h3>
+
+    <div class="about__grid">
+      <div class="about__text reveal">
+        <p>
+          I'm <strong>曾银晶 (Crystal Zeng)</strong>, a Marketing student at
+          <strong>Guangdong University of Foreign Studies</strong> (2024—2028), with a GPA of
+          <strong>3.76/4.0</strong> (top 15%) and a scholarship recipient.
+        </p>
+        <p>
+          As an <strong>AIGC content creator</strong> and <strong>cultural IP designer</strong>,
+          I believe design is not just visual presentation — it's a vehicle for storytelling.
+          Through prompt engineering, multimodal pipeline design, and AI toolchains, I bring
+          traditional culture to life in the digital world: seen, remembered, and loved.
+        </p>
+        <p>
+          My flagship project, <strong>「影灵灵 · AI Shadow Puppet Cultural IP」</strong>, covers
+          the full AIGC production pipeline from character design to original Bilibili short films.
+          I also built a <strong>Feishu Automation System</strong> that compressed response time
+          from 30 minutes to 5 seconds using zero-code automation.
+        </p>
+        <p>
+          Previously interned at <strong>China Foreign Trade Guangzhou Property Development Co., Ltd.</strong>,
+          handling cultural product data analysis and client engagement. I'm always exploring the
+          intersection of traditional culture, AI technology, and modern marketing.
+        </p>
+      </div>
+
+      <div class="about__info reveal reveal-d1">
+        <div class="info-block">
+          <div class="info-block__label">Education</div>
+          <div class="info-block__value">
+            B.A. Marketing<br>
+            Guangdong University of Foreign Studies<br>
+            2024 — 2028
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-block__label">GPA</div>
+          <div class="info-block__value">3.76 / 4.0 (Top 15%)</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block__label">Location</div>
+          <div class="info-block__value">Guangzhou, China</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block__label">Languages</div>
+          <div class="info-block__value">Chinese (Native) · English (CET-6 550+)</div>
+        </div>
+        <div class="info-block">
+          <div class="info-block__label">Currently</div>
+          <div class="info-block__value">Available for collaborations &amp; internships</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SKILLS (04) ========== -->
+  <section class="section container" id="skills">
+    <div class="section__header reveal">
+      <span class="section__num">04</span>
+      <h2 class="section__title">Skills &amp; Expertise</h2>
+      <span class="section__meta">08 areas</span>
+    </div>
+
+    <p class="skills__note reveal">Adjusted self-evaluation · 8 skill groups</p>
+
+    <div class="skill-accordion reveal">
+      <div class="skill-item open">
+        <div class="skill-item__header">
+          <span class="skill-item__num">01</span>
+          <span class="skill-item__name">AIGC Content Production</span>
+          <span class="skill-item__grade">9.2 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I build AIGC pipelines from scratch — from prompt engineering to multimodal content
+              generation, maintaining visual consistency across characters, scenes, and media formats.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Prompt Engineering</span>
+              <span class="skill-item__keyword">Midjourney</span>
+              <span class="skill-item__keyword">Runway</span>
+              <span class="skill-item__keyword">即梦</span>
+              <span class="skill-item__keyword">Character Design</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-item__header">
+          <span class="skill-item__num">02</span>
+          <span class="skill-item__name">Cultural IP Design</span>
+          <span class="skill-item__grade">8.8 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I design cultural IP systems that bridge traditional heritage with digital innovation —
+              from character world-building to merchandise design.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Character Systems</span>
+              <span class="skill-item__keyword">World-building</span>
+              <span class="skill-item__keyword">Cultural Heritage</span>
+              <span class="skill-item__keyword">Storytelling</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-item__header">
+          <span class="skill-item__num">03</span>
+          <span class="skill-item__name">Brand Strategy & Visual Identity</span>
+          <span class="skill-item__grade">8.2 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I craft cohesive visual identities — from logos to full brand systems — that
+              communicate a clear and memorable presence.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Logo Design</span>
+              <span class="skill-item__keyword">Brand Systems</span>
+              <span class="skill-item__keyword">Market Research</span>
+              <span class="skill-item__keyword">Positioning</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-item__header">
+          <span class="skill-item__num">04</span>
+          <span class="skill-item__name">Digital Marketing & Automation</span>
+          <span class="skill-item__grade">8.5 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I leverage zero-code tools and automation platforms to build efficient marketing
+              workflows. My Feishu Automation project demonstrated 90% efficiency improvement.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Feishu / Lark</span>
+              <span class="skill-item__keyword">Zero-Code</span>
+              <span class="skill-item__keyword">Workflow Design</span>
+              <span class="skill-item__keyword">Data Analysis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-item__header">
+          <span class="skill-item__num">05</span>
+          <span class="skill-item__name">Video Production & Editing</span>
+          <span class="skill-item__grade">7.8 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I produce original short films and video content — from storyboarding to final edit.
+              Two Bilibili short films for 影灵灵 demonstrate my ability to combine AIGC footage
+              with traditional editing.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Storyboarding</span>
+              <span class="skill-item__keyword">AIGC Video</span>
+              <span class="skill-item__keyword">Bilibili</span>
+              <span class="skill-item__keyword">Post-production</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-item__header">
+          <span class="skill-item__num">06</span>
+          <span class="skill-item__name">Market Research & Analysis</span>
+          <span class="skill-item__grade">8.0 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I conduct market research and data analysis to inform design and marketing decisions.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Data Analysis</span>
+              <span class="skill-item__keyword">Consumer Insights</span>
+              <span class="skill-item__keyword">Excel</span>
+              <span class="skill-item__keyword">User Research</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-item__header">
+          <span class="skill-item__num">07</span>
+          <span class="skill-item__name">Project Management</span>
+          <span class="skill-item__grade">8.6 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I lead projects end-to-end — from concept to delivery. As founder of 影灵灵 and
+              project lead for the Feishu Automation system.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Team Leadership</span>
+              <span class="skill-item__keyword">Timeline Management</span>
+              <span class="skill-item__keyword">Cross-team Collaboration</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-item__header">
+          <span class="skill-item__num">08</span>
+          <span class="skill-item__name">Creative Storytelling</span>
+          <span class="skill-item__grade">8.4 / 10</span>
+          <span class="skill-item__arrow">↓</span>
+        </div>
+        <div class="skill-item__body">
+          <div class="skill-item__content">
+            <p class="skill-item__desc">
+              I craft narratives that connect traditional culture with modern audiences. Through
+              bilingual storytelling (CN/EN), I build emotional resonance.
+            </p>
+            <div class="skill-item__keywords">
+              <span class="skill-item__keyword">Narrative Design</span>
+              <span class="skill-item__keyword">Bilingual (CN/EN)</span>
+              <span class="skill-item__keyword">Content Strategy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RESUME (05) ========== -->
+  <section class="section container" id="resume">
+    <div class="section__header reveal">
+      <span class="section__num">05</span>
+      <h2 class="section__title">Resume</h2>
+    </div>
+
+    <div class="resume__section reveal">
+      <h3 class="resume__section-title">Experience</h3>
+
+      <div class="resume__entry">
+        <div class="resume__date">2025 — Present</div>
+        <div class="resume__detail">
+          <h4>Founder & AIGC Lead</h4>
+          <p class="resume__org">影灵灵 · AI Shadow Puppet Cultural IP</p>
+          <p>
+            Founded and lead an AIGC cultural IP project reviving Chinese shadow puppetry.
+            Designed the full production pipeline: character design, prompt engineering,
+            multimodal content generation, and original Bilibili short films.
+          </p>
+        </div>
+      </div>
+
+      <div class="resume__entry">
+        <div class="resume__date">2026.06</div>
+        <div class="resume__detail">
+          <h4>Project Lead · Digital Marketing Course</h4>
+          <p class="resume__org">Feishu Automation System · Guangdong University of Foreign Studies</p>
+          <p>
+            Led a team to design and deploy a zero-code Feishu automation system for campus
+            group-buying. Achieved 90% efficiency improvement (30min → 5s response time)
+            and boosted success rate from 40% to 75%.
+          </p>
+        </div>
+      </div>
+
+      <div class="resume__entry">
+        <div class="resume__date">2025</div>
+        <div class="resume__detail">
+          <h4>Intern</h4>
+          <p class="resume__org">China Foreign Trade Guangzhou Property Development Co., Ltd.</p>
+          <p>
+            Handled cultural product data analysis and client engagement. Contributed to
+            market research and digital marketing initiatives.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume__section reveal">
+      <h3 class="resume__section-title">Education</h3>
+      <div class="resume__entry">
+        <div class="resume__date">2024 — 2028</div>
+        <div class="resume__detail">
+          <h4>B.A. Marketing</h4>
+          <p class="resume__org">Guangdong University of Foreign Studies · Guangzhou, China</p>
+          <p>GPA 3.76/4.0 (Top 15%) · Scholarship Recipient · CET-6 550+</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume__section reveal">
+      <h3 class="resume__section-title">Recognition</h3>
+      <div class="awards">
+        <div class="award-card">
+          <div class="award-card__title">Scholarship Recipient</div>
+          <div class="award-card__source">GDUFS · Academic Excellence</div>
+        </div>
+        <div class="award-card">
+          <div class="award-card__title">Top 15% GPA</div>
+          <div class="award-card__source">3.76 / 4.0</div>
+        </div>
+        <div class="award-card">
+          <div class="award-card__title">CET-6 550+</div>
+          <div class="award-card__source">English Proficiency</div>
+        </div>
+        <div class="award-card">
+          <div class="award-card__title">Bilibili Creator</div>
+          <div class="award-card__source">2 Original AIGC Short Films</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT (06) ========== -->
+  <section class="section container" id="contact">
+    <div class="section__header reveal">
+      <span class="section__num">06</span>
+      <h2 class="section__title">Contact</h2>
+    </div>
+
+    <div class="contact__inner reveal">
+      <h3 class="contact__title">Let's talk.</h3>
+      <p class="contact__desc">
+        Partnerships, collaborations, or just to say hello — I'd love to hear from you.
+      </p>
+
+      <form class="contact__form" onsubmit="sendMessage(event)">
+        <div class="honeypot">
+          <label>Don't fill this out: <input type="text" name="company"></label>
+        </div>
+
+        <div class="contact__options">
+          <button type="button" class="contact__option selected" data-type="work" onclick="selectOption(this)">Work</button>
+          <button type="button" class="contact__option" data-type="mentorship" onclick="selectOption(this)">Mentorship</button>
+          <button type="button" class="contact__option" data-type="other" onclick="selectOption(this)">Other</button>
+        </div>
+
+        <div class="contact__field">
+          <label class="contact__label">Email</label>
+          <input type="email" class="contact__input" id="contactEmail" required>
+        </div>
+
+        <div class="contact__field">
+          <label class="contact__label">Message</label>
+          <textarea class="contact__textarea" id="contactMessage" rows="4" required></textarea>
+        </div>
+
+        <button type="submit" class="contact__submit">Send message</button>
+      </form>
+
+      <div class="contact__socials">
+        <a href="https://github.com/Crystallin1018" target="_blank" class="contact__social">GitHub ↗</a>
+        <a href="https://space.bilibili.com/2031015294" target="_blank" class="contact__social">Bilibili ↗</a>
+        <a href="mailto:LinWan1020@163.com" class="contact__social">Email ↗</a>
+        <a href="javascript:void(0);" onclick="copyWechat()" class="contact__social">WeChat: Zzing1018</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand-name">曾银晶 Crystal Zeng</div>
+          <div class="footer__brand-role">AIGC Creator & Cultural IP Designer</div>
+          <p class="footer__brand-tagline">
+            Bringing traditional culture to life through AI-powered storytelling.
+            Based in Guangzhou, China.
+          </p>
+        </div>
+        <div>
+          <div class="footer__col-title">Navigation</div>
+          <ul class="footer__col-list">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#works">Works</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#resume">Resume</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Social</div>
+          <ul class="footer__col-list">
+            <li><a href="https://github.com/Crystallin1018" target="_blank">GitHub ↗</a></li>
+            <li><a href="https://space.bilibili.com/2031015294" target="_blank">Bilibili ↗</a></li>
+            <li><a href="mailto:LinWan1020@163.com">Email ↗</a></li>
+            <li><a href="javascript:void(0);" onclick="copyWechat()">WeChat: Zzing1018</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>Designed &amp; developed by yours truly © 2026</span>
+        <a href="#contact">Let's talk.</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== TOAST ========== -->
+  <div class="toast" id="toast">微信号已复制 ✓</div>
+
+  <!-- ========== JAVASCRIPT ========== -->
+  <script>
+    // === Mouse coordinate tracker ===
+    (function() {
+      var tracker = document.getElementById('coordTracker');
+      if (!tracker) return;
+      document.addEventListener('mousemove', function(e) {
+        tracker.textContent = '{ x: ' + e.clientX + ', y: ' + e.clientY + ' }';
+      }, { passive: true });
+    })();
+
+    // === Mobile nav toggle ===
+    function toggleNav() {
+      document.getElementById('navList').classList.toggle('open');
+    }
+    document.querySelectorAll('.nav-top__link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        document.getElementById('navList').classList.remove('open');
+      });
+    });
+
+    // === Smooth scroll ===
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var href = this.getAttribute('href');
+        if (href === '#' || href === '') return;
+        var target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          var offset = 70;
+          var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // === Skill accordion (fixed: prevent scroll-from-triggering-toggle) ===
+    (function() {
+      var headers = document.querySelectorAll('.skill-item__header');
+      headers.forEach(function(header) {
+        var isScroll = false;
+
+        // Touch: detect scroll vs tap
+        header.addEventListener('touchstart', function() {
+          isScroll = false;
+        }, { passive: true });
+
+        header.addEventListener('touchmove', function() {
+          isScroll = true;
+        }, { passive: true });
+
+        // Click: only toggle if not a scroll (desktop + fallback)
+        header.addEventListener('click', function(e) {
+          if (isScroll) {
+            isScroll = false;
+            return;
+          }
+          header.parentElement.classList.toggle('open');
+        });
+
+        // Touchend: if tap (not scroll), toggle + prevent synthetic click
+        header.addEventListener('touchend', function(e) {
+          if (!isScroll) {
+            e.preventDefault();
+            header.parentElement.classList.toggle('open');
+          }
+          isScroll = false;
+        });
+      });
+    })();
+
+    // === Contact option selection ===
+    function selectOption(btn) {
+      document.querySelectorAll('.contact__option').forEach(function(b) {
+        b.classList.remove('selected');
+      });
+      btn.classList.add('selected');
+    }
+
+    // === Contact form submit ===
+    function sendMessage(e) {
+      e.preventDefault();
+      var email = document.getElementById('contactEmail').value;
+      var msg = document.getElementById('contactMessage').value;
+      var type = 'work';
+      document.querySelectorAll('.contact__option').forEach(function(b) {
+        if (b.classList.contains('selected')) type = b.getAttribute('data-type');
+      });
+      if (!email || !msg) return;
+      var subject = encodeURIComponent('[Portfolio Contact · ' + type + '] From ' + email);
+      var body = encodeURIComponent(msg + '\n\n— ' + email);
+      window.location.href = 'mailto:LinWan1020@163.com?subject=' + subject + '&body=' + body;
+    }
+
+    // === WeChat copy ===
+    function copyWechat() {
+      var wechat = 'Zzing1018';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(wechat).then(function() { showToast(); });
+      } else {
+        var input = document.createElement('input');
+        input.value = wechat;
+        document.body.appendChild(input);
+        input.select();
+        try { document.execCommand('copy'); showToast(); } catch(err) {}
+        document.body.removeChild(input);
+      }
+    }
+    function showToast() {
+      var t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(function() { t.classList.remove('show'); }, 2200);
+    }
+
+    // === Theme toggle (light/dark) — real CSS variable swap ===
+    function toggleTheme() {
+      var html = document.documentElement;
+      var isDark = html.classList.toggle('dark');
+      try { localStorage.setItem('crystal-theme', isDark ? 'dark' : 'light'); } catch(e) {}
+    }
+    // Restore saved theme on load
+    (function() {
+      try {
+        var saved = localStorage.getItem('crystal-theme');
+        if (saved === 'dark') document.documentElement.classList.add('dark');
+        else if (saved === 'light') document.documentElement.classList.remove('dark');
+        else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch(e) {}
+    })();
+
+    // === Scroll progress bar ===
+    function initScrollProgress() {
+      var bar = document.getElementById('scrollProgress');
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement;
+        var scrolled = h.scrollTop || document.body.scrollTop;
+        var max = (h.scrollHeight - h.clientHeight) || 1;
+        bar.style.transform = 'scaleX(' + Math.min(scrolled / max, 1) + ')';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+      update();
+    }
+
+    // === Scroll reveal ===
+    function initReveal() {
+      var els = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+        els.forEach(function(el) { obs.observe(el); });
+      } else {
+        els.forEach(function(el) { el.classList.add('visible'); });
+      }
+    }
+
+    // === Active section tracking ===
+    function initSectionTracking() {
+      var sections = document.querySelectorAll('section[id]');
+      var navLinks = document.querySelectorAll('.nav-top__link');
+      function updateActive() {
+        var scrollPos = window.pageYOffset + 120;
+        var currentId = '';
+        sections.forEach(function(sec) {
+          if (scrollPos >= sec.offsetTop) currentId = sec.getAttribute('id');
+        });
+        navLinks.forEach(function(link) {
+          var href = link.getAttribute('href');
+          if (href === '#' + currentId) link.classList.add('active');
+          else link.classList.remove('active');
+        });
+      }
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        initReveal();
+        initSectionTracking();
+        initScrollProgress();
+      });
+    } else {
+      initReveal();
+      initSectionTracking();
+      initScrollProgress();
+    }
+  </script>
+
+</body>
+</html>
