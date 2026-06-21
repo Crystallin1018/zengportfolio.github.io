@@ -193,7 +193,7 @@
     }
 
     /* ============ PRODUCTION PIPELINE（WebGL 升级版）============ */
-    .pipeline-section { padding: 80px 40px 128px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
+    .pipeline-section { padding: 32px 40px 64px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
     .pipeline-intro {
       font-size: 14px; color: var(--text-medium); margin-bottom: 64px;
       max-width: 520px; line-height: 1.8;
@@ -203,7 +203,7 @@
     .pipeline-canvas-wrapper {
       position: relative;
       width: 100%;
-      height: 500px;
+      height: 300px;
       border-radius: 20px;
       overflow: hidden;
       background: rgba(253, 251, 247, 0.5);
@@ -231,32 +231,35 @@
 
     .pipeline-nodes {
       display: flex;
-      gap: 24px;
+      gap: 20px;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      max-width: 1100px;
+      max-width: 960px;
       padding: 0 20px;
     }
 
     /* 玻璃节点 */
     .pipeline-node {
       position: relative;
-      padding: 20px 22px;
-      background: rgba(255, 255, 255, 0.65);
+      width: 150px;
+      height: 195px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(250, 247, 242, 0.92);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.08);
       text-align: center;
-      min-width: 150px;
-      max-width: 180px;
       transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
                   box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
       pointer-events: auto;
       cursor: default;
-      /* 3D 空间层级错位 */
       transform: translateY(0px) translateZ(0px);
     }
 
@@ -267,29 +270,7 @@
     .pipeline-node[data-depth="4"] { transition-delay: 240ms; }
     .pipeline-node[data-depth="5"] { transition-delay: 320ms; }
 
-    /* 流动光线（节点内闪光） */
-    .pipeline-node::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(0, 0, 0, 0.05),
-        transparent
-      );
-      background-size: 200% 100%;
-      animation: nodeShine 3s infinite linear;
-      pointer-events: none;
-    }
-
-    @keyframes nodeShine {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* Hover 漂浮效果 */
+    /* 流动光线 SVG */
     .pipeline-node:hover {
       transform: translateY(-12px) scale(1.05) !important;
       box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08);
@@ -364,54 +345,47 @@
       margin-top: 10px; letter-spacing: 1px;
     }
 
-    /* Gallery — 3D Ring Carousel */
-    .gallery-ring-section {
-      padding: 80px 40px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 10;
+    /* Gallery — Horizontal Draggable Strip */
+    .gallery-strip-section {
+      padding: 80px 0 128px; max-width: 100%; margin: 0 auto; position: relative; z-index: 10;
       overflow: hidden;
     }
-    .gallery-ring-container {
-      perspective: 2000px;
-      width: 100%;
-      height: 560px;
-      position: relative;
+    .gallery-strip-label {
+      padding: 0 40px; margin-bottom: 48px;
     }
-    .gallery-stage {
-      width: 100%; height: 100%;
-      transform-style: preserve-3d;
-    }
-    .gallery-ring {
-      width: 300px; height: 420px;
-      position: absolute; left: 50%; top: 50%;
-      transform-style: preserve-3d;
+    .gallery-strip-container {
+      overflow: hidden;
       cursor: grab;
-      user-select: none;
-      -webkit-user-select: none;
+      padding: 0 40px;
     }
-    .gallery-ring.dragging { cursor: grabbing; }
-    .ring-card {
-      position: absolute; width: 100%; height: 100%;
-      backface-visibility: hidden;
+    .gallery-strip-container.dragging { cursor: grabbing; }
+    .gallery-strip {
+      display: flex;
+      gap: 20px;
+      transition: none;
+    }
+    .gallery-strip-item {
+      flex-shrink: 0;
+      width: 280px; height: 380px;
       border-radius: 10px; overflow: hidden;
       cursor: pointer;
       box-shadow: 0 12px 48px rgba(0,0,0,0.18);
       transition: box-shadow 0.5s ease;
+      position: relative;
     }
-    .ring-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.28); }
-    .ring-card img {
+    .gallery-strip-item:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.28); }
+    .gallery-strip-item img {
       width: 100%; height: 100%; object-fit: cover; display: block;
     }
-    .ring-card-placeholder {
-      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-      font-size: 48px; background: linear-gradient(135deg, #e8e4dc 0%, #d8d2c4 100%);
-    }
-    .ring-card-label {
-      position: absolute; bottom: 0; left: 0; right: 0; padding: 32px 14px 10px;
+    .gallery-strip-item .strip-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 32px 14px 14px;
       background: linear-gradient(transparent, rgba(0,0,0,0.5));
-      color: #fff; font-size: 11px; font-family: var(--font-sans);
-      text-align: center; pointer-events: none;
+      color: #fff; font-size: 12px; font-family: var(--font-sans);
+      pointer-events: none;
     }
-    .gallery-hint {
-      text-align: center; margin-top: 32px;
+    .gallery-strip-hint {
+      text-align: center; margin-top: 24px; padding: 0 40px;
       font-size: 13px; color: var(--text-light);
       font-family: var(--font-sans);
       animation: hintPulse 3s ease-in-out infinite;
@@ -467,10 +441,10 @@
       .films-grid { grid-template-columns: 1fr; gap: 20px; }
       .gallery-ring-container { height: 420px; }
       .gallery-ring { width: 220px; height: 308px; }
-      .pipeline-canvas-wrapper { height: auto; min-height: 500px; padding: 40px 0; }
+      .pipeline-canvas-wrapper { height: auto; min-height: 300px; padding: 24px 0; }
       .pipeline-ui { position: relative; height: auto; }
       .pipeline-nodes { gap: 16px; flex-wrap: wrap; }
-      .pipeline-node { min-width: 130px; padding: 16px 14px; }
+      .pipeline-node { width: 130px; height: 175px; padding: 16px 12px; }
       .hero-float-ip { right: -20px; width: 220px; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 22px; }
     }
@@ -479,10 +453,10 @@
       .project-hero-meta { gap: 16px; }
       .gallery-ring-container { height: 340px; }
       .gallery-ring { width: 180px; height: 252px; }
-      .pipeline-canvas-wrapper { height: auto; min-height: 600px; padding: 40px 0; }
+      .pipeline-canvas-wrapper { height: auto; min-height: 360px; padding: 24px 0; }
       .pipeline-ui { align-items: flex-start; padding-top: 0; }
-      .pipeline-nodes { flex-direction: column; gap: 20px; }
-      .pipeline-node { max-width: 100%; min-width: auto; padding: 14px 16px; cursor: pointer; }
+      .pipeline-nodes { flex-direction: column; gap: 16px; }
+      .pipeline-node { width: 100%; max-width: 280px; height: auto; min-height: 60px; padding: 14px 16px; cursor: pointer; }
       .pipeline-node.collapsed .node-tool,
       .pipeline-node.collapsed .node-detail { display: none; }
       .pipeline-node.collapsed { padding: 10px 16px; }
@@ -640,14 +614,12 @@
   </section>
 
   <!-- ============ GALLERY ============ -->
-  <section class="gallery-ring-section" id="gallery">
-    <p class="section-label">Photo Gallery</p>
-    <div class="gallery-ring-container">
-      <div class="gallery-stage">
-        <div class="gallery-ring" id="galleryRing"></div>
-      </div>
+  <section class="gallery-strip-section" id="gallery">
+    <p class="section-label gallery-strip-label">Photo Gallery</p>
+    <div class="gallery-strip-container" id="galleryStripContainer">
+      <div class="gallery-strip" id="galleryStrip"></div>
     </div>
-    <p class="gallery-hint">← 拖拽旋转浏览 →</p>
+    <p class="gallery-strip-hint">← 拖拽浏览 →</p>
   </section>
 
   <!-- ============ FOOTER ============ -->
@@ -681,127 +653,86 @@
       { file: 'making_piying.png',             caption: '幕后花絮 - 制作过程' }
     ];
 
-    function buildGallery() {
-      var ring = document.getElementById('galleryRing');
-      if (!ring) return;
-      var total = yinglingPics.length;
-      var anglePer = 360 / total;
+    function buildStripGallery() {
+      var strip = document.getElementById('galleryStrip');
+      var container = document.getElementById('galleryStripContainer');
+      if (!strip || !container) return;
 
-      yinglingPics.forEach(function(pic, i) {
-        var card = document.createElement('div');
-        card.className = 'ring-card';
-        card.setAttribute('data-index', i);
+      yinglingPics.forEach(function(pic) {
+        var item = document.createElement('div');
+        item.className = 'gallery-strip-item';
 
         var img = document.createElement('img');
         img.src = 'images/yinglingling/' + pic.file;
         img.alt = pic.caption;
         img.loading = 'lazy';
-        (function(cardEl, picFile, picCaption) {
-          img.onerror = function() {
-            this.style.display = 'none';
-            var ph = document.createElement('div');
-            ph.className = 'ring-card-placeholder';
-            ph.textContent = '🎭';
-            cardEl.insertBefore(ph, cardEl.querySelector('.ring-card-label'));
-          };
-        })(card, pic.file, pic.caption);
-        card.appendChild(img);
+        img.onerror = function() {
+          this.style.display = 'none';
+          var ph = document.createElement('div');
+          ph.className = 'ring-card-placeholder';
+          ph.textContent = '🎭';
+          ph.style.width = '100%';
+          ph.style.height = '100%';
+          ph.style.display = 'flex';
+          ph.style.alignItems = 'center';
+          ph.style.justifyContent = 'center';
+          ph.style.fontSize = '48px';
+          ph.style.background = 'linear-gradient(135deg, #e8e4dc 0%, #d8d2c4 100%)';
+          item.insertBefore(ph, item.firstChild);
+        };
+        item.appendChild(img);
 
-        var label = document.createElement('div');
-        label.className = 'ring-card-label';
-        label.textContent = pic.caption;
-        card.appendChild(label);
+        var cap = document.createElement('div');
+        cap.className = 'strip-caption';
+        cap.textContent = pic.caption;
+        item.appendChild(cap);
 
         // Click to lightbox
         (function(f, c) {
-          card.addEventListener('click', function(e) {
-            e.stopPropagation();
+          item.addEventListener('click', function(e) {
+            if (isDraggingStrip) return;
             openLightbox(f, c);
           });
         })(pic.file, pic.caption);
 
-        ring.appendChild(card);
+        strip.appendChild(item);
       });
 
-      // GSAP: set initial 3D positions
-      var cards = ring.querySelectorAll('.ring-card');
-      gsap.set(ring, { rotationY: 180, xPercent: -50, yPercent: -50 });
-      gsap.set(cards, {
-        rotateY: function(i) { return i * -anglePer; },
-        transformOrigin: '50% 50% 500px',
-        z: -500
-      });
-      gsap.from(cards, {
-        duration: 1.5, y: 120, opacity: 0, stagger: 0.08, ease: 'power2.out', delay: 0.3
-      });
+      // === DRAG TO SCROLL (horizontal) ===
+      var isDraggingStrip = false, startX = 0, stripPos = 0;
 
-      // Hover: dim non-hovered cards (PC only)
-      if (window.innerWidth >= 768) {
-        ring.addEventListener('mouseenter', function(e) {
-          if (e.target.classList.contains('ring-card')) {
-            gsap.to(cards, { opacity: function(i, el) { return el === e.target ? 1 : 0.4; }, duration: 0.4, ease: 'power2' });
-          }
-        }, true);
-        ring.addEventListener('mouseleave', function(e) {
-          gsap.to(cards, { opacity: 1, duration: 0.4, ease: 'power2.inOut' });
-        }, true);
+      function onStripStart(e) {
+        isDraggingStrip = false;
+        container.classList.add('dragging');
+        startX = e.touches ? e.touches[0].clientX : e.clientX;
       }
 
-      // === DRAG TO ROTATE (fixed) ===
-      var isDragging = false, lastX = 0, momentum = 0;
-      var dragThreshold = 4;
-      var hasDragged = false;
-
-      function onStart(e) {
-        // Don't start drag on PC if clicking a card (let card click trigger lightbox)
-        if (e.type === 'mousedown') {
-          var target = e.target;
-          while (target && target !== ring) {
-            if (target.classList && target.classList.contains('ring-card')) return;
-            target = target.parentNode;
-          }
-        }
-        isDragging = true;
-        hasDragged = false;
-        ring.classList.add('dragging');
-        lastX = e.touches ? e.touches[0].clientX : e.clientX;
-        momentum = 0;
-      }
-
-      function onMove(e) {
-        if (!isDragging) return;
+      function onStripMove(e) {
+        if (!container.classList.contains('dragging')) return;
         var x = e.touches ? e.touches[0].clientX : e.clientX;
-        var delta = x - lastX;
-        if (Math.abs(delta) > dragThreshold) hasDragged = true;
-        if (!hasDragged) return;
+        var walk = x - startX;
+        if (Math.abs(walk) > 5) isDraggingStrip = true;
+        if (!isDraggingStrip) return;
         if (e.cancelable !== false) e.preventDefault();
-        momentum = delta * 0.6;
-        var currentRot = gsap.getProperty(ring, 'rotationY');
-        gsap.set(ring, { rotationY: currentRot - delta * 0.4 });
-        lastX = x;
+        strip.style.transform = 'translateX(' + (stripPos + walk) + 'px)';
       }
 
-      function onEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        ring.classList.remove('dragging');
-        if (hasDragged) {
-          var currentRot = gsap.getProperty(ring, 'rotationY');
-          gsap.to(ring, {
-            rotationY: currentRot - momentum * 15,
-            duration: 1.8,
-            ease: 'power3.out'
-          });
-        }
+      function onStripEnd(e) {
+        if (!container.classList.contains('dragging')) return;
+        container.classList.remove('dragging');
+        if (!isDraggingStrip) return;
+        var x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+        var walk = x - startX;
+        stripPos += walk;
+        isDraggingStrip = false;
       }
 
-      ring.addEventListener('mousedown', onStart);
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseup', onEnd);
-      ring.addEventListener('touchstart', onStart, { passive: false });
-      window.addEventListener('touchmove', onMove, { passive: false });
-      window.addEventListener('touchend', onEnd);
-      ring.addEventListener('dragstart', function(e) { e.preventDefault(); });
+      container.addEventListener('mousedown', onStripStart);
+      window.addEventListener('mousemove', onStripMove);
+      window.addEventListener('mouseup', onStripEnd);
+      container.addEventListener('touchstart', onStripStart, { passive: false });
+      window.addEventListener('touchmove', onStripMove, { passive: false });
+      window.addEventListener('touchend', onStripEnd);
     }
 
     function openLightbox(filename, caption) {
@@ -874,7 +805,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      buildGallery();
+      buildStripGallery();
       initScrollAnimations();
     });
   </script>
