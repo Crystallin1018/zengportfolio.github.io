@@ -1525,6 +1525,36 @@
       .hero-deco-letter {
         display: none;
       }
+      /* About Me - Mobile: vertical stack */
+      .about-intro { display: none; }
+
+      .about-card { padding: 0 16px; }
+
+      .about-card-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .about-card-col {
+        width: 100%;
+        min-width: auto;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border-hairline);
+      }
+
+      .about-card-col h4 {
+        font-size: 13px;
+        margin-bottom: 10px;
+        letter-spacing: 0.1em;
+      }
+
+      .about-card-col p {
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 6px;
+      }
     }
 
   </style>
@@ -1617,12 +1647,7 @@
     </div>
     <h2 class="section-heading fade-up">ABOUT ME</h2>
 
-    <!-- Bio only (photo stack moved to Hero right column) -->
-    <div class="about-intro fade-up">
-      <div class="about-intro-bio">
-        <p>我是<strong>曾银晶 Crystal</strong>，广东外语外贸大学市场营销专业2028届在读。专注于「<strong>内容创意 × AI 技术 × 自动化系统</strong>」的落地实践，擅长基于 AIGC 工具搭建从脚本策划到图像、视频生成的完整内容生产流水线，并通过提示词工程提升 AI 生成的一致性与可控性。同时具备无代码自动化系统设计能力，能够利用飞书等工具将人工业务流程转化为自动化闭环。在实践中参与过线下文创门店运营与数据分析，能够将用户反馈与数据洞察结合用于业务优化。核心优势在于快速学习新工具，并将其结构化整合成可复用的系统与解决方案。</p>
-      </div>
-    </div>
+
 
     <!-- About Card -->
     <div class="about-card fade-up">
