@@ -1198,11 +1198,38 @@
       .section { padding: 64px 20px; }
       .section-divider { width: calc(100% - 40px); }
 
-      .hero { padding: 90px 16px 28px; min-height: auto; flex-direction: row; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
-      .hero-left { width: 35%; display: flex; justify-content: center; align-items: flex-start; }
-      .hero-cta-row { position: relative; bottom: auto; left: auto; transform: none; margin-top: 16px; flex-wrap: wrap; justify-content: flex-start; }
-      .hero-cta { padding: 10px 20px; font-size: 13px; }
-      .hero-right { width: 65%; display: flex; flex-direction: column; align-items: flex-start; }
+      .hero {
+        flex-direction: column !important;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 80px 20px 40px;
+        min-height: 100vh;
+        gap: 0;
+      }
+      .hero-left { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
+      .hero-cta-row {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch;
+        width: 100% !important;
+        max-width: 320px !important;
+        margin: 16px auto 32px auto !important;
+        gap: 14px !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: 999 !important;
+      }
+      .hero-cta {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        padding: 14px 24px;
+        font-size: 15px;
+        width: 100% !important;
+        z-index: 1000 !important;
+      }
+      .hero-right { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; text-align: center; }
       .hero-photo-stack {
           width: 120px;
           height: 160px;
@@ -1500,15 +1527,15 @@
       }
 
       .hero-cta--primary {
-        background: var(--accent);
-        color: #fff;
+        background: var(--text-dark);
+        color: var(--bg-primary);
         border: none;
       }
 
       .hero-cta--secondary {
-        background: transparent;
-        color: var(--text);
-        border: 1.5px solid var(--border);
+        background: var(--bg-shell);
+        color: var(--text-dark);
+        border: 1px solid var(--border-hairline);
       }
 
       /* 4. Scroll indicator (bottom) */
@@ -1565,6 +1592,54 @@
       }
     }
 
+
+    /* ============================================
+       MOBILE CTA FORCE VISIBLE (max-width: 768px)
+       ============================================ */
+    @media (max-width: 768px) {
+      .hero {
+        overflow: visible !important;
+      }
+
+      .hero-cta-row {
+        display: flex !important;
+        flex-direction: column !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 999 !important;
+        width: 100% !important;
+        max-width: 340px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-top: 20px !important;
+        margin-bottom: 36px !important;
+        gap: 14px !important;
+      }
+
+      .hero-cta-row .hero-cta {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 1000 !important;
+        width: 100% !important;
+        pointer-events: auto !important;
+      }
+
+      .hero-cta-row .hero-cta--primary {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: var(--text-dark) !important;
+        color: var(--bg-primary) !important;
+      }
+
+      .hero-cta-row .hero-cta--secondary {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    }
   </style>
 </head>
 
