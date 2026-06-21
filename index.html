@@ -1470,15 +1470,23 @@
         transform: none;
         width: 100%;
         max-width: 320px;
-        display: flex;
-        flex-direction: column;
+        display: flex !important;
+        flex-direction: column !important;
         align-items: stretch;
         gap: 14px;
         margin-top: 0;
+        margin-bottom: 32px;
         /* 移动端：按钮立即显示 */
-        opacity: 1;
-        visibility: visible;
+        opacity: 1 !important;
+        visibility: visible !important;
         transform: none;
+        z-index: 10;
+      }
+
+      .hero-cta-row .hero-cta {
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
       }
 
       .hero-cta {
