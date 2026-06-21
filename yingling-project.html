@@ -50,13 +50,6 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 256px 256px;
     }
-    body::before {
-      content: ''; position: fixed; top: -40%; left: 50%; transform: translateX(-50%);
-      width: 1000px; height: 800px; z-index: 0; pointer-events: none;
-      background: radial-gradient(ellipse at center, rgba(139,111,71,0.06) 0%, transparent 70%);
-      filter: blur(80px);
-    }
-
     a { color: inherit; text-decoration: none; transition: opacity 0.4s var(--ease-lux); }
     a:hover { opacity: 0.6; }
 
@@ -199,51 +192,152 @@
       text-transform: uppercase;
     }
 
-    /* ============ PRODUCTION PIPELINE ============ */
+    /* ============ PRODUCTION PIPELINE（WebGL 升级版）============ */
     .pipeline-section { padding: 80px 40px 128px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
     .pipeline-intro {
       font-size: 14px; color: var(--text-medium); margin-bottom: 64px;
       max-width: 520px; line-height: 1.8;
     }
-    .pipeline-flow {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+
+    /* Canvas 包裹层 */
+    .pipeline-canvas-wrapper {
       position: relative;
+      width: 100%;
+      height: 500px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(253, 251, 247, 0.5);
+      border: 1px solid var(--border-hairline);
     }
-    /* Connecting line */
-    .pipeline-flow::before {
-      content: ''; position: absolute; top: 48px; left: 12.5%; right: 12.5%;
-      height: 1px; background: var(--border); z-index: 0;
+
+    #pipelineCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
     }
-    .pipeline-step {
-      position: relative; z-index: 1; text-align: center;
-      padding: 0 12px;
+
+    /* UI 浮层 */
+    .pipeline-ui {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .pipeline-dot {
-      width: 14px; height: 14px; border-radius: 50%;
-      background: var(--accent); margin: 0 auto 32px;
-      position: relative; z-index: 2;
-      transition: transform 0.5s var(--ease-spring), box-shadow 0.5s var(--ease-lux);
-      box-shadow: 0 0 0 6px var(--bg-primary), 0 0 0 7px var(--border);
+
+    .pipeline-nodes {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 1100px;
+      padding: 0 20px;
     }
-    .pipeline-step:hover .pipeline-dot {
-      transform: scale(1.4);
-      box-shadow: 0 0 0 8px var(--bg-primary), 0 0 0 9px var(--accent);
+
+    /* 玻璃节点 */
+    .pipeline-node {
+      position: relative;
+      padding: 20px 22px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      text-align: center;
+      min-width: 150px;
+      max-width: 180px;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+      pointer-events: auto;
+      cursor: default;
+      /* 3D 空间层级错位 */
+      transform: translateY(0px) translateZ(0px);
     }
-    .pipeline-icon {
-      font-size: 32px; margin-bottom: 18px; display: block;
-      transition: transform 0.5s var(--ease-spring);
+
+    /* 滚动触发：不同节点不同延迟 */
+    .pipeline-node[data-depth="1"] { transition-delay: 0ms; }
+    .pipeline-node[data-depth="2"] { transition-delay: 80ms; }
+    .pipeline-node[data-depth="3"] { transition-delay: 160ms; }
+    .pipeline-node[data-depth="4"] { transition-delay: 240ms; }
+    .pipeline-node[data-depth="5"] { transition-delay: 320ms; }
+
+    /* 流动光线（节点内闪光） */
+    .pipeline-node::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 0, 0, 0.05),
+        transparent
+      );
+      background-size: 200% 100%;
+      animation: nodeShine 3s infinite linear;
+      pointer-events: none;
     }
-    .pipeline-step:hover .pipeline-icon { transform: scale(1.15) translateY(-4px); }
-    .pipeline-tool {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
-      letter-spacing: 1.5px; color: var(--accent); margin-bottom: 8px;
+
+    @keyframes nodeShine {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
-    .pipeline-task {
-      font-family: var(--font-serif); font-size: 14px; font-weight: 600;
-      color: var(--text-dark); margin-bottom: 6px; line-height: 1.4;
+
+    /* Hover 漂浮效果 */
+    .pipeline-node:hover {
+      transform: translateY(-12px) scale(1.05) !important;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.08);
     }
-    .pipeline-detail {
-      font-size: 11px; color: var(--text-light); line-height: 1.6;
+
+    .node-emoji {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 10px;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .pipeline-node:hover .node-emoji {
+      transform: scale(1.2) translateY(-2px);
+    }
+
+    .node-title {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .node-tool {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      color: var(--text-medium);
+      margin-bottom: 6px;
+    }
+
+    .node-detail {
+      font-size: 11px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* 流动光线 SVG */
+    .pipeline-lines {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.5;
     }
 
     /* Double-Bezel film cards */
@@ -373,8 +467,10 @@
       .films-grid { grid-template-columns: 1fr; gap: 20px; }
       .gallery-ring-container { height: 420px; }
       .gallery-ring { width: 220px; height: 308px; }
-      .pipeline-flow { grid-template-columns: repeat(2, 1fr); gap: 36px 0; }
-      .pipeline-flow::before { display: none; }
+      .pipeline-canvas-wrapper { height: auto; min-height: 500px; padding: 40px 0; }
+      .pipeline-ui { position: relative; height: auto; }
+      .pipeline-nodes { gap: 16px; flex-wrap: wrap; }
+      .pipeline-node { min-width: 130px; padding: 16px 14px; }
       .hero-float-ip { right: -20px; width: 220px; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 22px; }
     }
@@ -383,8 +479,14 @@
       .project-hero-meta { gap: 16px; }
       .gallery-ring-container { height: 340px; }
       .gallery-ring { width: 180px; height: 252px; }
-      .pipeline-flow { grid-template-columns: 1fr; gap: 28px 0; }
-      .pipeline-dot { display: none; }
+      .pipeline-canvas-wrapper { height: auto; min-height: 600px; padding: 40px 0; }
+      .pipeline-ui { align-items: flex-start; padding-top: 0; }
+      .pipeline-nodes { flex-direction: column; gap: 20px; }
+      .pipeline-node { max-width: 100%; min-width: auto; padding: 14px 16px; cursor: pointer; }
+      .pipeline-node.collapsed .node-tool,
+      .pipeline-node.collapsed .node-detail { display: none; }
+      .pipeline-node.collapsed { padding: 10px 16px; }
+      .pipeline-node.expanded { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(0,0,0,0.10); }
       .hero-float-ip { right: -10px; width: 160px; opacity: 0.7; }
     }
   </style>
@@ -422,7 +524,6 @@
     <h1 class="project-hero-title">影灵灵</h1>
     <p class="project-hero-subtitle">AI 皮影文化 IP · 在传统与智能的交汇处设计。</p>
     <div class="project-hero-meta">
-      <div class="meta-item">角色：<strong>项目负责人</strong></div>
       <div class="meta-item">时间：<strong>2026.3 — 2026.6</strong></div>
       <div class="meta-item">类别：<strong>AIGC 内容生产</strong></div>
     </div>
@@ -440,38 +541,63 @@
 
   <hr class="section-divider">
 
-  <!-- ============ PRODUCTION PIPELINE ============ -->
+  <!-- ============ PRODUCTION PIPELINE（WebGL 升级版） ============ -->
   <section class="pipeline-section" id="pipeline">
     <p class="section-label">AIGC Production Pipeline</p>
     <p class="pipeline-intro">从 IP 定位到成片输出，一条完整的多模态管线串联起 AI 工具链。</p>
-    <div class="pipeline-flow">
-      <div class="pipeline-step fade-up">
-        <div class="pipeline-dot"></div>
-        <span class="pipeline-icon">📝</span>
-        <p class="pipeline-tool">DeepSeek / ChatGPT</p>
-        <p class="pipeline-task">IP 定位 & 脚本</p>
-        <p class="pipeline-detail">世界观构建、角色设定与叙事脚本生成</p>
-      </div>
-      <div class="pipeline-step fade-up">
-        <div class="pipeline-dot"></div>
-        <span class="pipeline-icon">🎨</span>
-        <p class="pipeline-tool">ChatGPT</p>
-        <p class="pipeline-task">图像生成</p>
-        <p class="pipeline-detail">Prompt 驱动角色设计、场景与关键帧输出</p>
-      </div>
-      <div class="pipeline-step fade-up">
-        <div class="pipeline-dot"></div>
-        <span class="pipeline-icon">🎬</span>
-        <p class="pipeline-tool">豆包 · Seedance</p>
-        <p class="pipeline-task">视频生成</p>
-        <p class="pipeline-detail">图生视频、动作驱动与镜头序列合成</p>
-      </div>
-      <div class="pipeline-step fade-up">
-        <div class="pipeline-dot"></div>
-        <span class="pipeline-icon">✂️</span>
-        <p class="pipeline-tool">剪映</p>
-        <p class="pipeline-task">后期剪辑 & 配音</p>
-        <p class="pipeline-detail">节奏剪辑、调色、字幕包装与音频合成</p>
+
+    <div class="pipeline-canvas-wrapper">
+      <canvas id="pipelineCanvas"></canvas>
+
+      <div class="pipeline-ui">
+        <div class="pipeline-nodes">
+          <div class="pipeline-node fade-up" data-depth="1">
+            <span class="node-emoji">✨</span>
+            <p class="node-title">IP 生成</p>
+            <p class="node-tool">DeepSeek / ChatGPT</p>
+            <p class="node-detail">世界观构建、角色设定与叙事脚本</p>
+          </div>
+
+          <div class="pipeline-node fade-up" data-depth="2">
+            <span class="node-emoji">🌊</span>
+            <p class="node-title">Prompt 视觉引擎</p>
+            <p class="node-tool">ChatGPT</p>
+            <p class="node-detail">角色一致性控制、风格锚点与分镜模板</p>
+          </div>
+
+          <div class="pipeline-node fade-up" data-depth="3">
+            <span class="node-emoji">🎨</span>
+            <p class="node-title">图像生成系统</p>
+            <p class="node-tool">ChatGPT</p>
+            <p class="node-detail">Prompt 驱动角色设计、场景与关键帧</p>
+          </div>
+
+          <div class="pipeline-node fade-up" data-depth="4">
+            <span class="node-emoji">🎬</span>
+            <p class="node-title">视频生成系统</p>
+            <p class="node-tool">豆包 · Seedance</p>
+            <p class="node-detail">图生视频、动作驱动与镜头序列合成</p>
+          </div>
+
+          <div class="pipeline-node fade-up" data-depth="5">
+            <span class="node-emoji">✂️</span>
+            <p class="node-title">后期与输出</p>
+            <p class="node-tool">剪映</p>
+            <p class="node-detail">节奏剪辑、调色、字幕包装与音频合成</p>
+          </div>
+        </div>
+
+        <!-- 流动光线 SVG -->
+        <svg class="pipeline-lines" viewBox="0 0 1000 100" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--text-dark)" stop-opacity="0" />
+              <stop offset="50%" stop-color="var(--text-dark)" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="var(--text-dark)" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <line x1="100" y1="50" x2="900" y2="50" stroke="url(#lineGrad)" stroke-width="1.5" />
+        </svg>
       </div>
     </div>
   </section>
@@ -609,32 +735,46 @@
         duration: 1.5, y: 120, opacity: 0, stagger: 0.08, ease: 'power2.out', delay: 0.3
       });
 
-      // Hover: dim non-hovered cards
-      ring.addEventListener('mouseenter', function(e) {
-        if (e.target.classList.contains('ring-card')) {
-          gsap.to(cards, { opacity: function(i, el) { return el === e.target ? 1 : 0.4; }, duration: 0.4, ease: 'power2' });
-        }
-      }, true);
-      ring.addEventListener('mouseleave', function(e) {
-        gsap.to(cards, { opacity: 1, duration: 0.4, ease: 'power2.inOut' });
-      }, true);
+      // Hover: dim non-hovered cards (PC only)
+      if (window.innerWidth >= 768) {
+        ring.addEventListener('mouseenter', function(e) {
+          if (e.target.classList.contains('ring-card')) {
+            gsap.to(cards, { opacity: function(i, el) { return el === e.target ? 1 : 0.4; }, duration: 0.4, ease: 'power2' });
+          }
+        }, true);
+        ring.addEventListener('mouseleave', function(e) {
+          gsap.to(cards, { opacity: 1, duration: 0.4, ease: 'power2.inOut' });
+        }, true);
+      }
 
-      // === DRAG TO ROTATE ===
-      var isDragging = false, lastX = 0, momentum = 0, animFrame = null;
+      // === DRAG TO ROTATE (fixed) ===
+      var isDragging = false, lastX = 0, momentum = 0;
+      var dragThreshold = 4;
+      var hasDragged = false;
 
       function onStart(e) {
+        // Don't start drag on PC if clicking a card (let card click trigger lightbox)
+        if (e.type === 'mousedown') {
+          var target = e.target;
+          while (target && target !== ring) {
+            if (target.classList && target.classList.contains('ring-card')) return;
+            target = target.parentNode;
+          }
+        }
         isDragging = true;
+        hasDragged = false;
         ring.classList.add('dragging');
         lastX = e.touches ? e.touches[0].clientX : e.clientX;
         momentum = 0;
-        if (animFrame) cancelAnimationFrame(animFrame);
       }
 
       function onMove(e) {
         if (!isDragging) return;
-        e.preventDefault();
         var x = e.touches ? e.touches[0].clientX : e.clientX;
         var delta = x - lastX;
+        if (Math.abs(delta) > dragThreshold) hasDragged = true;
+        if (!hasDragged) return;
+        if (e.cancelable !== false) e.preventDefault();
         momentum = delta * 0.6;
         var currentRot = gsap.getProperty(ring, 'rotationY');
         gsap.set(ring, { rotationY: currentRot - delta * 0.4 });
@@ -645,12 +785,14 @@
         if (!isDragging) return;
         isDragging = false;
         ring.classList.remove('dragging');
-        var currentRot = gsap.getProperty(ring, 'rotationY');
-        gsap.to(ring, {
-          rotationY: currentRot - momentum * 15,
-          duration: 1.8,
-          ease: 'power3.out'
-        });
+        if (hasDragged) {
+          var currentRot = gsap.getProperty(ring, 'rotationY');
+          gsap.to(ring, {
+            rotationY: currentRot - momentum * 15,
+            duration: 1.8,
+            ease: 'power3.out'
+          });
+        }
       }
 
       ring.addEventListener('mousedown', onStart);
@@ -737,5 +879,144 @@
     });
   </script>
 
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Pipeline Particle System -->
+  <script>
+    (function() {
+      if (typeof THREE === 'undefined') { console.warn('THREE not loaded'); return; }
+      // 手机端不加载粒子系统（性能优化 + 避免黑影）
+      if (window.innerWidth < 768) { return; }
+
+      var canvas = document.getElementById('pipelineCanvas');
+      if (!canvas) return;
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+      camera.position.z = 5;
+
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+      renderer.setClearColor(0x000000, 0);
+
+      // 粒子系统
+      var particleCount = 1500;
+      var geometry = new THREE.BufferGeometry();
+      var positions = new Float32Array(particleCount * 3);
+
+      for (var i = 0; i < particleCount * 3; i += 3) {
+        positions[i]     = (Math.random() - 0.5) * 12;
+        positions[i + 1] = (Math.random() - 0.5) * 12;
+        positions[i + 2] = (Math.random() - 0.5) * 12;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      var material = new THREE.PointsMaterial({
+        color: 0x888888,
+        size: 0.03,
+        transparent: true,
+        opacity: 0.6
+      });
+
+      var points = new THREE.Points(geometry, material);
+      scene.add(points);
+
+      // 鼠标交互
+      var mouseX = 0, mouseY = 0;
+      document.addEventListener('mousemove', function(e) {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+      });
+
+      // 滚动触发：节点浮动错位
+      var pipelineNodes = document.querySelectorAll('.pipeline-node');
+      function updateNodeDepths() {
+        var pipelineSection = document.getElementById('pipeline');
+        if (!pipelineSection) return;
+
+        var rect = pipelineSection.getBoundingClientRect();
+        var visible = rect.top < window.innerHeight && rect.bottom > 0;
+        if (!visible) return;
+
+        var progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / window.innerHeight));
+
+        pipelineNodes.forEach(function(node) {
+          var depth = parseInt(node.getAttribute('data-depth')) || 1;
+          var offsetY = Math.sin(progress * Math.PI + depth) * (10 + depth * 4);
+          var offsetX = Math.cos(progress * Math.PI * 0.5 + depth) * (5 + depth * 2);
+          node.style.transform = 'translateY(' + (-12 + offsetY) + 'px) translateX(' + offsetX + 'px)';
+        });
+      }
+
+      // 动画循环
+      function animate() {
+        requestAnimationFrame(animate);
+
+        points.rotation.y += 0.001 + mouseX * 0.0005;
+        points.rotation.x += 0.0005 + mouseY * 0.0003;
+
+        mouseX *= 0.98;
+        mouseY *= 0.98;
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener('scroll', updateNodeDepths);
+      updateNodeDepths();
+
+      // Canvas 自适应
+      function resizeCanvas() {
+        var wrapper = canvas.parentElement;
+        if (!wrapper) return;
+        var w = wrapper.offsetWidth;
+        var h = wrapper.offsetHeight;
+        canvas.width = w;
+        canvas.height = h;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+    })();
+  </script>
+
+
+    <script>
+      // Mobile Pipeline Node Expand (collapsed -> click -> expand upward)
+      (function() {
+        var pipelineNodes = document.querySelectorAll('.pipeline-node');
+        function setupMobile() {
+          if (window.innerWidth < 768) {
+            pipelineNodes.forEach(function(node, i) {
+              if (i > 0) node.classList.add('collapsed');
+              if (!node._expandBound) {
+                node.addEventListener('click', function() {
+                  if (node.classList.contains('collapsed')) {
+                    pipelineNodes.forEach(function(n) { n.classList.remove('expanded'); n.classList.add('collapsed'); });
+                    node.classList.remove('collapsed');
+                    node.classList.add('expanded');
+                    setTimeout(function() { node.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 60);
+                  } else {
+                    node.classList.remove('expanded');
+                    node.classList.add('collapsed');
+                  }
+                });
+                node._expandBound = true;
+              }
+            });
+          } else {
+            pipelineNodes.forEach(function(n) { n.classList.remove('collapsed', 'expanded'); });
+          }
+        }
+        setupMobile();
+        window.addEventListener('resize', setupMobile);
+      })();
+    </script>
 </body>
 </html>
