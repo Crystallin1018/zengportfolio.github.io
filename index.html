@@ -194,7 +194,7 @@
       -webkit-backdrop-filter: blur(40px) saturate(180%);
       z-index: 999;
       flex-direction: column;
-      align-items: center; justify-content: center;
+      align-items: center; justify-content: flex-start;
       gap: 0;
       transition: opacity 0.6s var(--ease-lux);
     }
@@ -218,7 +218,6 @@
     .mobile-nav.show a:nth-child(1) { transition-delay: 100ms; }
     .mobile-nav.show a:nth-child(2) { transition-delay: 180ms; }
     .mobile-nav.show a:nth-child(3) { transition-delay: 260ms; }
-    .mobile-nav.show a:nth-child(4) { transition-delay: 340ms; }
 
     /* ============================================
        EYEBROW TAGS (pill badges before headings)
@@ -249,12 +248,35 @@
        ============================================ */
     .hero {
       min-height: 100vh;
-      display: flex; flex-direction: column;
+      display: flex; flex-direction: row;
       align-items: center; justify-content: center;
-      padding: 140px 40px 100px;
+      padding: 100px 40px 60px 300px;
       position: relative;
-      overflow: hidden;
       z-index: 1;
+      gap: clamp(24px, 4vw, 60px);
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 7vw, 96px);
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+      letter-spacing: -1px;
+      white-space: nowrap;
+      margin-top: -40px;
+    }
+    
+    .hero-left {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-right {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
     }
 
     .hero-label {
@@ -265,13 +287,27 @@
       margin-bottom: 16px;
     }
 
-    .hero-title {
-      font-family: var(--font-serif);
-      font-size: clamp(48px, 10vw, 120px);
+    clamp(42px, 8vw, 110px);
       font-weight: 900;
       line-height: 1;
       text-align: center;
       letter-spacing: -1px;
+      white-space: nowrap;
+    }
+
+    /* 打字机光标 */
+    .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1em;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: cursor-blink 0.8s step-end infinite;
+    }
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0; }
     }
 
     .hero-subtitle {
@@ -284,51 +320,61 @@
       margin-top: 20px;
     }
 
-    .hero-tagline {
-      font-family: var(--font-serif);
-      font-size: clamp(18px, 3vw, 28px);
+    clamp(22px, 4vw, 36px);
       font-weight: 400;
       font-style: italic;
       color: var(--text-medium);
       text-align: center;
       max-width: 420px;
-      margin-top: 32px;
       line-height: 1.8;
     }
 
-    /* Avatar — Double-Bezel */
-    .hero-avatar-wrapper {
-      margin-top: 48px;
+    /* Hero photo stack — left column */
+    .hero-photo-stack {
+      flex-shrink: 0;
+      width: 340px;
+      height: 80vh;
+      max-height: 600px;
       position: relative;
     }
-    .hero-avatar-bezel {
-      padding: 5px;
-      background: var(--bg-shell);
-      border: 1px solid var(--border-hairline);
-      border-radius: 50%;
-      box-shadow: var(--shadow-ambient);
-    }
-    .hero-avatar {
-      width: 140px; height: 140px;
-      border-radius: 50%;
-      object-fit: cover;
+    .hero-photo-card {
+      position: absolute;
+      width: 300px; height: 460px;
+      border-radius: 16px;
       overflow: hidden;
-      background: linear-gradient(135deg, #e8e4dc 0%, #d8d2c4 100%);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: var(--shadow-bezel-inset);
+      background: var(--bg-warm);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.5s var(--ease-spring), opacity 0.5s ease, box-shadow 0.4s ease;
     }
-    .hero-avatar img {
+    .hero-photo-card img {
       width: 100%; height: 100%;
       object-fit: cover;
-      border-radius: 50%;
     }
-    .avatar-placeholder {
-      font-family: var(--font-serif);
-      font-size: 42px;
-      font-weight: 700;
-      color: var(--text-light);
-      display: flex; align-items: center; justify-content: center;
-      width: 100%; height: 100%;
+    .hero-photo-card.top {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-3deg);
+      z-index: 2;
+    }
+    .hero-photo-card.bottom {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -48%) rotate(2deg);
+      opacity: 0.85;
+      z-index: 1;
+    }
+    .hero-photo-stack.swapped .photo-top {
+      transform: translate(-45%, -48%) rotate(2deg);
+      z-index: 1;
+    }
+    .hero-photo-stack.swapped .photo-bottom {
+      transform: translate(-55%, -50%) rotate(-3deg);
+      opacity: 1;
+      z-index: 2;
+    }
+    .hero-photo-card:hover {
+      box-shadow: 0 12px 48px rgba(0,0,0,0.22);
     }
 
     /* Large decorative letter */
@@ -1131,6 +1177,16 @@
       .timeline-dot { width: 33px; min-width: 33px; font-size: 12px; }
 
       .skill-nebula { height: 460px; max-width: 100%; }
+
+      /* Hero: keep row on tablet, shrink photo */
+      .hero { padding: 90px 24px 40px 120px; gap: 20px; }
+      .hero-photo-stack { width: 260px; height: 65vh; max-height: 480px; }
+      .hero-photo-card { width: 230px; height: 360px; }
+      .hero-photo-card.bottom { transform: translate(-45%, -47%) rotate(2deg); }
+      .hero-photo-stack.swapped .photo-top { transform: translate(-45%, -47%) rotate(2deg); }
+      .hero-photo-stack.swapped .photo-bottom { transform: translate(-55%, -50%) rotate(-3deg); }
+      .hero-cta-row { bottom: 100px; }
+      .hero-cta { padding: 12px 24px; font-size: 14px; }
     }
 
     /* ============================================
@@ -1142,10 +1198,23 @@
       .section { padding: 64px 20px; }
       .section-divider { width: calc(100% - 40px); }
 
-      .hero { padding: 100px 16px 60px; min-height: 100vh; }
-      .hero-avatar { width: 110px; height: 110px; }
-      .avatar-placeholder { font-size: 32px; }
-
+      .hero { padding: 90px 16px 28px; min-height: auto; flex-direction: row; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
+      .hero-left { width: 35%; display: flex; justify-content: center; align-items: flex-start; }
+      .hero-cta-row { position: relative; bottom: auto; left: auto; transform: none; margin-top: 16px; flex-wrap: wrap; justify-content: flex-start; }
+      .hero-cta { padding: 10px 20px; font-size: 13px; }
+      .hero-right { width: 65%; display: flex; flex-direction: column; align-items: flex-start; }
+      .hero-photo-stack {
+          width: 120px;
+          height: 160px;
+          margin: 0;
+        }
+      .hero-photo-card { width: 100px; height: 140px; }
+      .hero-photo-card.top { transform: translate(-55%, -50%) rotate(-3deg); }
+      .hero-photo-card.bottom { transform: translate(-45%, -48%) rotate(2deg); }
+      .hero-photo-stack.swapped .photo-top { transform: translate(-45%, -48%) rotate(2deg); }
+      .hero-photo-stack.swapped .photo-bottom { transform: translate(-55%, -50%) rotate(-3deg); }
+      .hero-photo-stack.swapped .photo-top { transform: translate(-45%, -48%) rotate(2deg); }
+      .hero-photo-stack.swapped .photo-bottom { transform: translate(-55%, -50%) rotate(-3deg); }
       .skills-grid { grid-template-columns: 1fr; }
 
       .mag-masthead { flex-direction: column; align-items: center; gap: 4px; padding: 0 16px 16px; }
@@ -1225,6 +1294,87 @@
       transition-delay: 1.1s;
     }
     .hero.hero-loaded .scroll-indicator { opacity: 1; }
+
+    /* Hero CTA row — buttons flanking avatar */
+    .hero-cta-row {
+      position: absolute;
+      bottom: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      z-index: 5;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      transition: all 0.5s var(--ease-lux);
+      cursor: pointer;
+    }
+
+    .hero-cta--primary {
+      background: var(--text-dark);
+      color: var(--bg-primary);
+    }
+    .hero-cta--primary:hover { transform: scale(0.97); }
+    .hero-cta--secondary {
+      background: var(--bg-shell);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-dark);
+    }
+    .hero-cta--secondary:hover { border-color: var(--text-dark); transform: scale(0.97); }
+    .hero-cta-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      transition: all 0.5s var(--ease-lux);
+    }
+    .hero-cta--primary .hero-cta-icon { background: rgba(255,255,255,0.15); }
+    .hero-cta--secondary .hero-cta-icon { background: var(--bg-warm); }
+    .hero-cta:hover .hero-cta-icon { transform: translate(2px, -1px) scale(1.08); }
+
+    .hero-tagline {
+      font-family: var(--font-serif), "Songti SC", "STSong", serif;
+      font-size: clamp(22px, 4vw, 36px);
+      font-weight: 400;
+      color: var(--text-medium);
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+        /* Show tagline & CTA row after typing finishes */
+    .hero-tagline,
+    .hero-cta-row {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      margin-top: 0;
+      transition: opacity 0.9s var(--ease-expo), visibility 0.9s var(--ease-expo), transform 0.9s var(--ease-expo), margin-top 0.9s var(--ease-expo);
+    }
+    .hero.hero-typed .hero-tagline {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      margin-top: 32px;
+      transition-delay: 0.15s;
+    }
+    .hero.hero-typed .hero-cta-row {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0.45s;
+    }
   </style>
 </head>
 
@@ -1238,7 +1388,6 @@
       <a class="nav-link" data-target="hero">首页</a>
       <a class="nav-link" data-target="about">关于</a>
       <a class="nav-link" data-target="projects">项目</a>
-      <a class="nav-link" data-target="contact">联系</a>
     </div>
 
     <!-- Mobile hamburger — X morph -->
@@ -1252,32 +1401,41 @@
     <a data-target="hero" onclick="closeMobileNav()">首页</a>
     <a data-target="about" onclick="closeMobileNav()">关于</a>
     <a data-target="projects" onclick="closeMobileNav()">项目</a>
-    <a data-target="contact" onclick="closeMobileNav()">联系</a>
   </div>
 
 
   <!-- ==================== 01 HERO / HOME ==================== -->
   <section class="hero" id="hero">
 
-    <!-- Eyebrow badge -->
-    <div class="load-in" data-hero-i="5" style="margin-bottom: 20px;">
-      <span class="eyebrow">
-        <span class="eyebrow-dot"></span>
-        Portfolio &mdash; 2026
-      </span>
+    <!-- Left column: photo card stack -->
+    <div class="hero-left">
+      <div class="hero-photo-stack load-in" id="heroPhotoStack" data-hero-i="0">
+        <div class="hero-photo-card top photo-top" onclick="switchHeroPhoto()">
+          <img src="images/about-photo-1.jpg" alt="曾银晶 01" onerror="this.onerror=null;tryLoadExt(this,'images/about-photo-1')">
+        </div>
+        <div class="hero-photo-card bottom photo-bottom" onclick="switchHeroPhoto()">
+          <img src="images/about-photo-2.jpg" alt="曾银晶 02" onerror="this.onerror=null;tryLoadExt(this,'images/about-photo-2')">
+        </div>
+      </div>
     </div>
 
-    <h1 class="hero-title load-in" data-hero-i="4">ZENG YINJING</h1>
-    <p class="hero-tagline load-in" data-hero-i="2">
-      广东外语外贸大学 市场营销专业 2028届
-    </p>
+    <!-- Right column: text content -->
+    <div class="hero-right">
+      <h1 class="hero-title load-in" data-hero-i="0" id="heroTypewriter"></h1>
+      <p class="hero-tagline">
+        广东外语外贸大学 市场营销专业 2028届
+      </p>
 
-    <!-- Avatar — Double-Bezel -->
-    <div class="hero-avatar-wrapper load-in" data-hero-i="1">
-      <div class="hero-avatar-bezel">
-        <div class="hero-avatar" id="heroAvatar">
-          <div class="avatar-placeholder">曾</div>
-        </div>
+      <!-- CTA buttons (row) -->
+      <div class="hero-cta-row">
+        <a href="mailto:LinWan1020@163.com" class="hero-cta hero-cta--primary">
+          发送邮件
+          <span class="hero-cta-icon">↗</span>
+        </a>
+        <a href="曾银晶_简历.pdf" download class="hero-cta hero-cta--secondary">
+          下载简历
+          <span class="hero-cta-icon">↗</span>
+        </a>
       </div>
     </div>
 
@@ -1301,16 +1459,8 @@
     </div>
     <h2 class="section-heading fade-up">ABOUT ME</h2>
 
-    <!-- Photo Card Stack + Bio -->
+    <!-- Bio only (photo stack moved to Hero right column) -->
     <div class="about-intro fade-up">
-      <div class="about-photo-stack" id="aboutPhotoStack">
-        <div class="about-photo-card top photo-top" onclick="switchAboutPhoto()">
-          <img src="images/about-photo-1.jpg" alt="曾银晶 01">
-        </div>
-        <div class="about-photo-card bottom photo-bottom" onclick="switchAboutPhoto()">
-          <img src="images/about-photo-2.jpg" alt="曾银晶 02">
-        </div>
-      </div>
       <div class="about-intro-bio">
         <p>我是<strong>曾银晶 Crystal</strong>，广东外语外贸大学市场营销专业2028届在读。专注于「<strong>内容创意 × AI 技术 × 自动化系统</strong>」的落地实践，擅长基于 AIGC 工具搭建从脚本策划到图像、视频生成的完整内容生产流水线，并通过提示词工程提升 AI 生成的一致性与可控性。同时具备无代码自动化系统设计能力，能够利用飞书等工具将人工业务流程转化为自动化闭环。在实践中参与过线下文创门店运营与数据分析，能够将用户反馈与数据洞察结合用于业务优化。核心优势在于快速学习新工具，并将其结构化整合成可复用的系统与解决方案。</p>
       </div>
@@ -1432,52 +1582,7 @@
   <hr class="section-divider">
 
 
-  <!-- ==================== 04 CONTACT ==================== -->
-  <section class="section contact-section" id="contact" style="position:relative;overflow:hidden;">
-
-    <!-- Decorative SVG: Stack of books (left) -->
-    <svg class="contact-deco-left" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="10" y="50" width="90" height="12" rx="2" fill="#d8d2c4" stroke="#b8b0a0" stroke-width="1"/>
-      <rect x="15" y="38" width="82" height="12" rx="2" fill="#e0dbd0" stroke="#b8b0a0" stroke-width="1"/>
-      <rect x="8" y="62" width="94" height="12" rx="2" fill="#cec8bc" stroke="#b8b0a0" stroke-width="1"/>
-      <rect x="20" y="26" width="70" height="12" rx="2" fill="#e8e4dc" stroke="#b8b0a0" stroke-width="1"/>
-      <text x="28" y="59" font-family="'Noto Serif SC',serif" font-size="8" fill="#999" font-style="italic">DESIGN</text>
-      <text x="22" y="71" font-family="'Noto Serif SC',serif" font-size="8" fill="#999" font-style="italic">CREATE</text>
-    </svg>
-
-    <div class="contact-layout fade-up">
-      <div style="margin-bottom: 24px;">
-        <span class="eyebrow">
-          <span class="eyebrow-dot"></span>
-          Available for 2026
-        </span>
-      </div>
-
-      <p class="contact-email-line">Partnerships, Collaboration & Hello's</p>
-
-      <div class="contact-big-name">ZENG</div>
-
-      <p class="contact-email">
-        <a href="mailto:LinWan1020@163.com">LinWan1020@163.com</a>
-      </p>
-
-      <!-- Button-in-Button CTAs -->
-      <div class="contact-cta-group">
-        <a href="mailto:LinWan1020@163.com" class="contact-cta contact-cta--primary">
-          发送邮件
-          <span class="contact-cta-icon">↗</span>
-        </a>
-        <a href="曾银晶_简历.pdf" download class="contact-cta contact-cta--secondary">
-          下载简历
-          <span class="contact-cta-icon">↗</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <hr class="section-divider">
-
-  <!-- ==================== FOOTER ==================== -->
+    ======= FOOTER ==================== -->
   <footer>
     <div>&copy; 2026 曾银晶 &middot; All rights reserved.</div>
   </footer>
@@ -1490,36 +1595,15 @@
     //  AVATAR PRIORITY DETECTION
     // =====================================================
     function loadAvatar() {
-      var formats = ['png', 'jpg', 'jpeg'];
-      var attempted = 0;
-      formats.forEach(function(ext) {
-        var img = new Image();
-        img.onload = function() { setAvatarImage(img.src); };
-        img.onerror = function() {
-          attempted++;
-          if (attempted >= formats.length) {
-            console.log('[Avatar] No avatar file found. Showing placeholder.');
-          }
-        };
-        img.src = ext === 'png' ? 'avatar.png' : (ext === 'jpg' ? 'avatar.jpg' : 'avatar.jpeg');
-      });
+      // Avatar removed from HTML
     }
-    function setAvatarImage(src) {
-      var heroAvatar = document.getElementById('heroAvatar');
-      if (heroAvatar) {
-        heroAvatar.innerHTML = '<img src="' + src + '" alt="曾银晶" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-      }
-    }
-
-    // =====================================================
-    //  ABOUT PHOTO STACK SWITCH
-    // =====================================================
-    var aboutStackSwapped = false;
-    function switchAboutPhoto() {
-      var stack = document.getElementById('aboutPhotoStack');
+// Hero photo stack — click to swap
+    var heroStackSwapped = false;
+    function switchHeroPhoto() {
+      var stack = document.getElementById('heroPhotoStack');
       if (!stack) return;
-      aboutStackSwapped = !aboutStackSwapped;
-      stack.classList.toggle('swapped', aboutStackSwapped);
+      heroStackSwapped = !heroStackSwapped;
+      stack.classList.toggle('swapped', heroStackSwapped);
     }
 
     // =====================================================
@@ -2078,6 +2162,79 @@
           });
         });
       }
+
+      /* ========= 打字机效果 ========= */
+      (function initTypewriter() {
+        var el = document.getElementById('heroTypewriter');
+        if (!el) return;
+
+        var texts = [
+          'Hi，我是曾银晶',
+          'Hi，I\'m Yinjing',
+        ];
+        var typingSpeed    = 120;
+        var deletingSpeed  = 60;
+        var pauseAfterType  = 2000;
+        var pauseAfterDelete = 400;
+
+        var textIndex  = 0;
+        var charIndex  = 0;
+        var isDeleting = false;
+        var isWaiting  = false;
+
+
+        var cursor = document.createElement('span');
+        cursor.className = 'typewriter-cursor';
+        cursor.setAttribute('aria-hidden', 'true');
+
+        function tick() {
+          if (isWaiting) return;
+          var current = texts[textIndex];
+
+          if (!isDeleting) {
+            el.textContent = current.slice(0, charIndex + 1);
+            charIndex++;
+            if (charIndex === current.length) {
+              isWaiting = true;
+              (function(){
+                var heroEl = document.querySelector(".hero");
+                if (heroEl) heroEl.classList.add("hero-typed");
+              })();
+              
+              setTimeout(function() {
+                isWaiting = false;
+                isDeleting = true;
+              }, pauseAfterType);
+              return;
+            }
+            setTimeout(tick, typingSpeed);
+          } else {
+            el.textContent = current.slice(0, charIndex - 1);
+            charIndex--;
+            if (charIndex === 0) {
+              isWaiting = true;
+              isDeleting = false;
+              textIndex = (textIndex + 1) % texts.length;
+              setTimeout(function() { isWaiting = false; tick(); }, pauseAfterDelete);
+              return;
+            }
+            setTimeout(tick, deletingSpeed);
+          }
+        }
+
+        function startWhenReady() {
+          var hero = document.querySelector('.hero');
+          if (hero && hero.classList.contains('hero-loaded')) {
+            el.parentNode.insertBefore(cursor, el.nextSibling);
+            // 立即开始打字，与照片动画同时出现
+            requestAnimationFrame(function() { tick(); });
+          } else {
+            setTimeout(startWhenReady, 200);
+          }
+        }
+        startWhenReady();
+      })();
+
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', triggerHeroAnimation);
       } else {
