@@ -566,6 +566,29 @@
       color: var(--text-medium);
       margin-bottom: 3px;
     }
+    .about-card-col .skills-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .about-card-col .skills-list li {
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: var(--text-medium);
+      margin-bottom: 3px;
+      padding-left: 16px;
+      position: relative;
+    }
+    .about-card-col .skills-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--text-dark);
+      font-weight: 700;
+      font-size: 14px;
+      line-height: inherit;
+    }
     .about-card-col strong { color: var(--text-dark); font-weight: 600; }
 
     /* About Me 描述段落黑点 */
@@ -1589,6 +1612,11 @@
         line-height: 1.6;
         margin-bottom: 6px;
       }
+      .about-card-col .skills-list li {
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 6px;
+      }
     }
 
 
@@ -1767,7 +1795,11 @@
         <!-- 右下：个人技能 -->
         <div class="about-card-col">
           <h4>个人技能</h4>
-          <p>使用 AI Agent（WorkBuddy）完成个人作品集网站 Vibe Coding</p>
+          <ul class="skills-list">
+            <li>英语水平：CET-6（550+），具备良好的英语读写与口语交流能力</li>
+            <li>办公软件：熟练使用Word、Excel、PPT等办公软件 / 剪映进行视频拼接、字幕、配音等</li>
+            <li>AI工具：ChatGPT / DeepSeek / AI Agent（WorkBuddy）进行个人网站 Vibe Coding</li>
+          </ul>
         </div>
       </div>
     </div>
